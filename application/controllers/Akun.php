@@ -1,0 +1,151 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Akun extends CI_Controller {
+
+    public function __construct() {
+        parent::__construct();
+        $this->load->model('Akun_model');
+        $this->load->library(['session', 'form_validation']);
+        $this->load->helper('form');
+        $this->cek_login();
+    }
+
+    // Pastikan user sudah login sebelum akses halaman akun
+    private function cek_login() {
+        if (!$this->session->userdata('logged_in')) {
+            $this->session->set_flashdata('warning', 'Silakan login terlebih dahulu.');
+            redirect('auth/login');
+        }
+    }
+
+    // Halaman paket saya
+    public function paket_saya() {
+        $label_kelas = [
+            'Privat1'   => 'Privat (45 Menit | 8x Pertemuan)',
+            'Privat2'   => 'Privat (60 Menit | 8x Pertemuan)',
+            'Kelompok1' => 'Kelompok (45 Menit | 8x Pertemuan)',
+            'Kelompok2' => 'Kelompok (60 Menit | 8x Pertemuan)',
+        ];
+        $harga = [
+            'TK'  => ['Privat1' => 330000, 'Privat2' => 430000, 'Kelompok1' => 290000, 'Kelompok2' => 380000],
+            'SMP' => ['Privat1' => 365000, 'Privat2' => 480000, 'Kelompok1' => 330000, 'Kelompok2' => 430000],
+            'SMA' => ['Privat1' => 440000, 'Privat2' => 580000, 'Kelompok1' => 405000, 'Kelompok2' => 530000],
+        ];
+        $data['paket']       = $this->Akun_model->get_paket_aktif($this->session->userdata('user_id'));
+        $data['label_kelas'] = $label_kelas;
+        $data['harga']       = $harga;
+        $this->load->view('v_paket_saya', $data);
+    }
+
+    // Halaman pesanan saya
+    public function pesanan_saya() {
+        $data['pesanan'] = $this->Akun_model->get_pesanan($this->session->userdata('user_id'));
+        $data['status_config'] = [
+            'pending'    => ['label' => 'Menunggu Pembayaran', 'class' => 'bg-warning text-dark',  'icon' => 'bi-clock'],
+            'lunas'      => ['label' => 'Lunas',               'class' => 'bg-success text-white',  'icon' => 'bi-check-circle-fill'],
+            'ditolak'    => ['label' => 'Ditolak',             'class' => 'bg-danger text-white',   'icon' => 'bi-x-circle-fill'],
+            'kadaluarsa' => ['label' => 'Kadaluarsa',          'class' => 'bg-secondary text-white','icon' => 'bi-calendar-x-fill'],
+        ];
+        $this->load->view('v_pesanan_saya', $data);
+    }
+
+    // Halaman informasi akun
+    public function informasi() {
+        $data['user'] = $this->Akun_model->get_user($this->session->userdata('user_id'));
+        $this->load->view('v_informasi_akun', $data);
+    }
+
+    // Proses update username
+    public function update_username() {
+        $this->form_validation->set_rules('username_baru', 'Username', 'required|trim|min_length[3]|max_length[50]', [
+            'required'   => 'Username tidak boleh kosong.',
+            'min_length' => 'Username minimal 3 karakter.',
+            'max_length' => 'Username maksimal 50 karakter.',
+        ]);
+
+        if ($this->form_validation->run() === FALSE) {
+            $this->session->set_flashdata('error', trim(strip_tags($this->form_validation->error_string())));
+            redirect('akun/informasi');
+            return;
+        }
+
+        $username_baru = $this->input->post('username_baru', TRUE);
+        $user_id       = $this->session->userdata('user_id');
+
+        if ($this->Akun_model->username_exists($username_baru, $user_id)) {
+            $this->session->set_flashdata('error', 'Username sudah digunakan, coba yang lain.');
+            redirect('akun/informasi');
+            return;
+        }
+
+        $this->Akun_model->update_username($user_id, $username_baru);
+        $this->session->set_userdata('username', $username_baru);
+        $this->session->set_flashdata('success', 'Username berhasil diperbarui.');
+        redirect('akun/informasi');
+    }
+
+    // Proses update email
+    public function update_email() {
+        $this->form_validation->set_rules('email_baru', 'Email', 'required|trim|valid_email', [
+            'required'    => 'Email tidak boleh kosong.',
+            'valid_email' => 'Format email tidak valid.',
+        ]);
+
+        if ($this->form_validation->run() === FALSE) {
+            $this->session->set_flashdata('error', trim(strip_tags($this->form_validation->error_string())));
+            redirect('akun/informasi');
+            return;
+        }
+
+        $email_baru = $this->input->post('email_baru', TRUE);
+        $user_id    = $this->session->userdata('user_id');
+
+        if ($this->Akun_model->email_exists($email_baru, $user_id)) {
+            $this->session->set_flashdata('error', 'Email sudah digunakan akun lain.');
+            redirect('akun/informasi');
+            return;
+        }
+
+        $this->Akun_model->update_email($user_id, $email_baru);
+        $this->session->set_flashdata('success', 'Email berhasil diperbarui.');
+        redirect('akun/informasi');
+    }
+
+    // Proses update password
+    public function update_password() {
+        $this->form_validation->set_rules('password_lama', 'Password Lama', 'required', [
+            'required' => 'Password lama tidak boleh kosong.',
+        ]);
+        $this->form_validation->set_rules('password_baru', 'Password Baru', 'required|min_length[6]', [
+            'required'   => 'Password baru tidak boleh kosong.',
+            'min_length' => 'Password baru minimal 6 karakter.',
+        ]);
+        $this->form_validation->set_rules('konfirmasi_password', 'Konfirmasi Password', 'required|matches[password_baru]', [
+            'required' => 'Konfirmasi password tidak boleh kosong.',
+            'matches'  => 'Konfirmasi password tidak cocok.',
+        ]);
+
+        if ($this->form_validation->run() === FALSE) {
+            $this->session->set_flashdata('error', trim(strip_tags($this->form_validation->error_string())));
+            redirect('akun/informasi');
+            return;
+        }
+
+        $user_id      = $this->session->userdata('user_id');
+        $password_lama = $this->input->post('password_lama');
+        $password_baru = $this->input->post('password_baru');
+
+        $user = $this->Akun_model->get_user($user_id);
+
+        if (!password_verify($password_lama, $user->password)) {
+            $this->session->set_flashdata('error', 'Password lama tidak sesuai.');
+            redirect('akun/informasi');
+            return;
+        }
+
+        $this->Akun_model->update_password($user_id, password_hash($password_baru, PASSWORD_BCRYPT));
+        $this->session->set_flashdata('success', 'Password berhasil diperbarui.');
+        redirect('akun/informasi');
+    }
+}
