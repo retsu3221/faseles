@@ -16,6 +16,83 @@
         </div>
     </section>
 
+	<div class="container my-5 py-4 border-top">
+        <div class="text-center mb-5">
+            <span class="text-primary fw-bold text-uppercase tracking-wide">Pilihan Terbaik</span>
+            <h2 class="fw-bold mt-2">Daftar Kelas & Paket Harga</h2>
+            <p class="text-muted">Pilih paket belajar yang paling sesuai dengan jenjang pendidikan dan kebutuhanmu di FASE Les.</p>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            
+            <!-- 1. PAKET TK & SD -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm border-0 border-top border-danger border-4 hover-lift" style="transition: transform 0.3s ease;">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="text-center mb-4">
+                            <span class="badge bg-danger text-white rounded-pill px-3 py-2 mb-3">Tingkat TK & SD</span>
+                            <h5 class="fw-bold text-muted mb-1">Privat</h5>
+                            <h2 class="display-8 fw-bold text-dark mb-0">Rp 430.000<span class="fs-6 text-muted fw-normal">/8x Pertemuan</span></h2>
+							<h5 class="fw-bold text-muted mt-3 mb-1">Kelompok</h5>
+							<h2 class="display-8 fw-bold text-dark mb-0">Rp 380.000<span class="fs-6 text-muted fw-normal">/8x Pertemuan</span></h2>
+                        </div>
+                        <ul class="list-unstyled text-muted mb-4 flex-grow-1">
+                            <li class="mb-3">&#10004; <strong class="text-dark">Durasi 45 - 60 Menit</strong> / Pertemuan</li>
+                            <li class="mb-3">&#10004; <strong class="text-dark">Calistung</strong> & Pendampingan PR</li>
+                            <li class="mb-3">&#10004; Konsep belajar <em>Fun Learning</em></li>
+                            <li class="mb-3">&#10004; Pilihan: <strong>Privat atau Kelompok</strong></li>
+                        </ul>
+                        <a href="<?= site_url('pendaftaran/daftar'); ?>" class="btn btn-outline-danger fw-bold rounded-pill w-100 mt-auto">Pilih Paket SD</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. PAKET SMP -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow border-0 border-top border-success border-4 position-relative" style="transform: transform 0.3s ease;;">
+                    <div class="card-body p-4 mt-2 d-flex flex-column">
+                        <div class="text-center mb-4">
+                            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2 mb-3 fw-bold">Tingkat SMP/MTs</span>
+                            <h5 class="fw-bold text-muted mb-1">Privat</h5>
+                            <h2 class="display-8 fw-bold text-dark mb-0">Rp 480.000<span class="fs-6 text-muted fw-normal">/8x Pertemuan</span></h2>
+							<h5 class="fw-bold text-muted mt-3 mb-1">Kelompok</h5>
+							<h2 class="display-8 fw-bold text-dark mb-0">Rp 430.000<span class="fs-6 text-muted fw-normal">/8x Pertemuan</span></h2>
+                        </div>
+                        <ul class="list-unstyled text-muted mb-4 flex-grow-1">
+                            <li class="mb-3">&#10004; <strong class="text-dark">Durasi 45 - 60 Menit</strong> / Pertemuan</li>
+                            <li class="mb-3">&#10004; Penguatan pemahaman konsep dasar</li>
+                            <li class="mb-3">&#10004; Persiapan Ulangan & Ujian Sekolah</li>
+                            <li class="mb-3">&#10004; Pilihan: <strong>Privat atau Kelompok</strong></li>
+                        </ul>
+                        <a href="<?= site_url('pendaftaran/daftar'); ?>" class="btn btn-success fw-bold rounded-pill w-100 mt-auto shadow-sm">Pilih Paket SMP</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. PAKET SMA -->
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 shadow-sm border-0 border-top border-primary border-4 hover-lift" style="transition: transform 0.3s ease;">
+                    <div class="card-body p-4 d-flex flex-column">
+                        <div class="text-center mb-4">
+                            <span class="badge bg-primary text-white rounded-pill px-3 py-2 mb-3">Tingkat SMA/SMK</span>
+                            <h5 class="fw-bold text-muted mb-1">Privat</h5>
+                            <h2 class="display-8 fw-bold text-dark mb-0">Rp 580.000<span class="fs-6 text-muted fw-normal">/8x Pertemuan</span></h2>
+							<h5 class="fw-bold text-muted mt-3 mb-1">Kelompok</h5>
+							<h2 class="display-8 fw-bold text-dark mb-0">Rp 530.000<span class="fs-6 text-muted fw-normal">/8x Pertemuan</span></h2>
+                        </div>
+                        <ul class="list-unstyled text-muted mb-4 flex-grow-1">
+                            <li class="mb-3">&#10004; <strong class="text-dark">Durasi 45 - 60 Menit</strong> / Pertemuan</li>
+                            <li class="mb-3">&#10004; Pembahasan soal level analisis & HOTS</li>
+                            <li class="mb-3">&#10004; Fokus pendalaman materi UTBK/SNBT</li>
+                            <li class="mb-3">&#10004; Pilihan: <strong>Privat atau Kelompok</strong></li>
+                        </ul>
+                        <a href="<?= site_url('pendaftaran/daftar'); ?>" class="btn btn-outline-primary fw-bold rounded-pill w-100 mt-auto">Pilih Paket SMA</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+	</div>
+
     <div class="container py-5 mb-4">
         <div class="row g-4 justify-content-center">
 
