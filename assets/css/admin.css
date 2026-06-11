@@ -1,0 +1,346 @@
+/* =========================================================
+   FASE Les — Admin Panel CSS
+   ========================================================= */
+
+/* ---------- Base ---------- */
+body {
+    font-family: 'Nunito', 'Segoe UI', sans-serif;
+    background-color: #f4f6fc;
+    overflow-x: hidden;
+}
+
+/* ---------- Wrapper ---------- */
+#wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+    width: 225px;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #4e73df 0%, #224abe 100%);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.25s ease;
+    z-index: 200;
+}
+
+/* Toggled (collapsed) */
+#wrapper.sidebar-toggled .sidebar {
+    width: 80px;
+    overflow: visible;
+}
+
+/* Brand */
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 4.375rem;
+    padding: 0 1rem;
+    text-decoration: none;
+    color: #fff;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar-brand-icon {
+    font-size: 1.6rem;
+    flex-shrink: 0;
+}
+
+.sidebar-brand-text {
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.04rem;
+    margin-left: 0.65rem;
+    transition: opacity 0.2s, width 0.2s;
+}
+
+#wrapper.sidebar-toggled .sidebar-brand-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+}
+
+#wrapper.sidebar-toggled .sidebar-brand {
+    justify-content: center;
+    padding: 0;
+}
+
+#wrapper.sidebar-toggled .sidebar-brand-icon {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+/* Divider */
+.sidebar-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.15);
+    margin: 0.5rem 1rem;
+}
+
+/* Section heading */
+.sidebar-heading {
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    color: rgba(255, 255, 255, 0.4);
+    padding: 0.6rem 1rem 0.2rem;
+    white-space: nowrap;
+    overflow: hidden;
+    transition: opacity 0.2s;
+}
+
+#wrapper.sidebar-toggled .sidebar-heading {
+    opacity: 0;
+}
+
+/* Nav links */
+.sidebar .nav-link {
+    display: flex;
+    align-items: center;
+    padding: 0.72rem 1rem;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 700;
+    font-size: 0.82rem;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+    border-radius: 0;
+}
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.sidebar .nav-link i {
+    font-size: 1rem;
+    min-width: 1.5rem;
+    text-align: center;
+    margin-right: 0.6rem;
+    color: rgba(255, 255, 255, 0.4);
+    flex-shrink: 0;
+    transition: color 0.15s;
+}
+
+.sidebar .nav-link:hover i,
+.sidebar .nav-link.active i {
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.sidebar .nav-link span {
+    transition: opacity 0.2s;
+}
+
+#wrapper.sidebar-toggled .sidebar .nav-link span {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+}
+
+#wrapper.sidebar-toggled .sidebar .nav-link {
+    justify-content: center;
+    padding: 0.72rem 0;
+}
+
+#wrapper.sidebar-toggled .sidebar .nav-link i {
+    margin-right: 0;
+    min-width: auto;
+    font-size: 1.15rem;
+}
+
+/* Sidebar toggle button */
+.sidebar-toggler {
+    padding: 0.75rem 0;
+}
+
+.sidebar-toggler button {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+    font-size: 0.85rem;
+}
+
+.sidebar-toggler button:hover {
+    background: rgba(255, 255, 255, 0.25);
+    color: #fff;
+}
+
+/* ---------- Content Wrapper ---------- */
+#content-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+    min-width: 0;
+}
+
+#content {
+    flex: 1;
+}
+
+/* ---------- Topbar ---------- */
+.topbar {
+    height: 4.375rem;
+    background: #fff;
+    box-shadow: 0 0.1rem 1rem rgba(58, 59, 69, 0.1);
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.topbar-divider {
+    width: 0;
+    border-right: 1px solid #dee2e6;
+    height: 2rem;
+    margin: 0 0.75rem;
+}
+
+/* ---------- Footer ---------- */
+.sticky-footer {
+    background: #fff;
+    padding: 1.25rem 0;
+    border-top: 1px solid #e9ecef;
+}
+
+/* ---------- Scroll to Top ---------- */
+.scroll-to-top {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: #4e73df;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, background 0.2s, transform 0.2s;
+    box-shadow: 0 4px 12px rgba(78, 115, 223, 0.4);
+    z-index: 1000;
+}
+
+.scroll-to-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.scroll-to-top:hover {
+    background: #2e59d9;
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+/* ---------- Stat Cards ---------- */
+.admin-stat-card {
+    border-left: 4px solid transparent;
+    border-radius: 0.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.admin-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+}
+
+.admin-stat-card.primary { border-left-color: #4e73df; }
+.admin-stat-card.success { border-left-color: #1cc88a; }
+.admin-stat-card.info    { border-left-color: #36b9cc; }
+.admin-stat-card.warning { border-left-color: #f6c23e; }
+.admin-stat-card.danger  { border-left-color: #e74a3b; }
+
+.admin-stat-card .stat-icon {
+    font-size: 2rem;
+    opacity: 0.25;
+}
+
+.admin-stat-card .stat-label {
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    margin-bottom: 0.25rem;
+}
+
+.admin-stat-card .stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2d3748;
+}
+
+/* ---------- Tables ---------- */
+.table th {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04rem;
+    color: #6c757d;
+    border-bottom-width: 1px;
+}
+
+/* ---------- Badges override ---------- */
+.badge {
+    font-weight: 600;
+    letter-spacing: 0.02rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 767.98px) {
+    .sidebar {
+        position: fixed;
+        left: -225px;
+        height: 100vh;
+        transition: left 0.25s ease, width 0.25s ease;
+    }
+
+    #wrapper.sidebar-toggled .sidebar {
+        left: 0;
+        width: 225px;
+    }
+
+    #wrapper.sidebar-toggled .sidebar .nav-link span,
+    #wrapper.sidebar-toggled .sidebar .sidebar-heading,
+    #wrapper.sidebar-toggled .sidebar .sidebar-brand-text {
+        opacity: 1;
+        width: auto;
+        overflow: visible;
+    }
+
+    #wrapper.sidebar-toggled::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 199;
+    }
+}

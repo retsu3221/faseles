@@ -73,23 +73,16 @@
 
                             <div class="mb-3">
                                 <label class="form-label text-muted fw-bold">Kelas & Paket yang Diambil</label>
-                                <select name="kelas" id="pilihanKelas" class="form-select bg-light" required>
+                                <select name="paket_id" id="pilihanKelas" class="form-select bg-light" required>
                                     <option value="" disabled selected>-- Pilih tingkat sekolah dulu --</option>
-
-                                    <option value="Privat1"   data-tingkat="TK">Privat TK & SD 1-6 &nbsp;|&nbsp; 45 Menit · 8x · Rp 330.000</option>
-                                    <option value="Privat2"   data-tingkat="TK">Privat TK & SD 1-6 &nbsp;|&nbsp; 60 Menit · 8x · Rp 430.000</option>
-                                    <option value="Kelompok1" data-tingkat="TK">Kelompok TK & SD 1-6 &nbsp;|&nbsp; 45 Menit · 8x · Rp 290.000</option>
-                                    <option value="Kelompok2" data-tingkat="TK">Kelompok TK & SD 1-6 &nbsp;|&nbsp; 60 Menit · 8x · Rp 380.000</option>
-
-                                    <option value="Privat1"   data-tingkat="SMP">Privat SMP &nbsp;|&nbsp; 45 Menit · 8x · Rp 365.000</option>
-                                    <option value="Privat2"   data-tingkat="SMP">Privat SMP &nbsp;|&nbsp; 60 Menit · 8x · Rp 480.000</option>
-                                    <option value="Kelompok1" data-tingkat="SMP">Kelompok SMP &nbsp;|&nbsp; 45 Menit · 8x · Rp 330.000</option>
-                                    <option value="Kelompok2" data-tingkat="SMP">Kelompok SMP &nbsp;|&nbsp; 60 Menit · 8x · Rp 430.000</option>
-
-                                    <option value="Privat1"   data-tingkat="SMA">Privat SMA/K &nbsp;|&nbsp; 45 Menit · 8x · Rp 440.000</option>
-                                    <option value="Privat2"   data-tingkat="SMA">Privat SMA/K &nbsp;|&nbsp; 60 Menit · 8x · Rp 580.000</option>
-                                    <option value="Kelompok1" data-tingkat="SMA">Kelompok SMA/K &nbsp;|&nbsp; 45 Menit · 8x · Rp 405.000</option>
-                                    <option value="Kelompok2" data-tingkat="SMA">Kelompok SMA/K &nbsp;|&nbsp; 60 Menit · 8x · Rp 530.000</option>
+                                    <?php
+                                    $tingkatLabel = ['TK' => 'TK & SD', 'SMP' => 'SMP/MTs', 'SMA' => 'SMA/K'];
+                                    foreach ($paket as $p):
+                                    ?>
+                                    <option value="<?= $p['id']; ?>" data-tingkat="<?= $p['tingkat']; ?>">
+                                        <?= htmlspecialchars($p['tipe_kelas']); ?> <?= $tingkatLabel[$p['tingkat']] ?? $p['tingkat']; ?> &nbsp;|&nbsp; <?= $p['durasi_menit']; ?> Menit · <?= $p['jumlah_pertemuan']; ?>x · Rp <?= number_format($p['harga'], 0, ',', '.'); ?>
+                                    </option>
+                                    <?php endforeach; ?>
                                 </select>
                             </div>
 

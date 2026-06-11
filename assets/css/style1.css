@@ -216,13 +216,6 @@ footer {
 }
 .dropdown-menu .dropdown-item:hover {
     background-color: #f0f4ff;
-    border-radius: 8px;
-}
-.dropdown-menu li {
-    padding: 0 6px;
-}
-.dropdown-menu li:first-child {
-    padding: 0;
 }
 .dropdown-menu .dropdown-divider {
     margin: 6px 12px;

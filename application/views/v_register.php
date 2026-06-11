@@ -51,6 +51,16 @@
                                     </div>
 
                                     <div class="mb-3">
+                                        <label class="form-label text-muted fw-bold small">Email</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0 text-muted">
+                                                <i class="bi bi-envelope-fill"></i>
+                                            </span>
+                                            <input type="email" name="email" class="form-control bg-light border-start-0" required placeholder="contoh@email.com">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
                                         <label class="form-label text-muted fw-bold small">Password</label>
                                         <div class="input-group">
                                             <span class="input-group-text bg-light border-end-0 text-muted">
@@ -96,6 +106,16 @@
                                                 <i class="bi bi-person-fill"></i>
                                             </span>
                                             <input type="text" name="username" class="form-control bg-light border-start-0" required placeholder="Buat username unik">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label text-muted fw-bold small">Email</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-light border-end-0 text-muted">
+                                                <i class="bi bi-envelope-fill"></i>
+                                            </span>
+                                            <input type="email" name="email" class="form-control bg-light border-start-0" required placeholder="contoh@email.com">
                                         </div>
                                     </div>
 

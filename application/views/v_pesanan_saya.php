@@ -54,15 +54,9 @@
                                     <h6 class="fw-bold mb-1"><?= htmlspecialchars($item['nama_lengkap']); ?></h6>
                                     <p class="text-muted small mb-0">
                                         <?= htmlspecialchars($item['asal_sekolah']); ?> &mdash;
-                                        <?php
-                                        $label_kelas = [
-                                            'Privat1'   => 'Privat 45 Menit',
-                                            'Privat2'   => 'Privat 60 Menit',
-                                            'Kelompok1' => 'Kelompok 45 Menit',
-                                            'Kelompok2' => 'Kelompok 60 Menit',
-                                        ];
-                                        echo htmlspecialchars($label_kelas[$item['kelas']] ?? $item['kelas']);
-                                        ?>
+                                        <?= !empty($item['tipe_kelas'])
+                                            ? htmlspecialchars($item['tipe_kelas'] . ' ' . $item['durasi_menit'] . ' Menit')
+                                            : '-'; ?>
                                     </p>
                                 </div>
 

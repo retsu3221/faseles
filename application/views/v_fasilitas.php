@@ -16,7 +16,7 @@
         </div>
     </section>
 
-	<div class="container my-5 py-4 border-top">
+	<div class="container my-5 py-4 border-top" id="paketHarga">
         <div class="text-center mb-5">
             <span class="text-primary fw-bold text-uppercase tracking-wide">Pilihan Terbaik</span>
             <h2 class="fw-bold mt-2">Daftar Kelas & Paket Harga</h2>
@@ -27,7 +27,7 @@
             
             <!-- 1. PAKET TK & SD -->
             <div class="col-lg-4 col-md-6">
-                <div class="card h-100 shadow-sm border-0 border-top border-danger border-4 hover-lift" style="transition: transform 0.3s ease;">
+                <div class="card h-100 shadow-sm border-0 border-top border-danger border-4 hover-lift">
                     <div class="card-body p-4 d-flex flex-column">
                         <div class="text-center mb-4">
                             <span class="badge bg-danger text-white rounded-pill px-3 py-2 mb-3">Tingkat TK & SD</span>
@@ -49,7 +49,7 @@
 
             <!-- 2. PAKET SMP -->
             <div class="col-lg-4 col-md-6">
-                <div class="card h-100 shadow border-0 border-top border-success border-4 position-relative" style="transform: transform 0.3s ease;;">
+                <div class="card h-100 shadow border-0 border-top border-success border-4 position-relative">
                     <div class="card-body p-4 mt-2 d-flex flex-column">
                         <div class="text-center mb-4">
                             <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2 mb-3 fw-bold">Tingkat SMP/MTs</span>
@@ -71,7 +71,7 @@
 
             <!-- 3. PAKET SMA -->
             <div class="col-lg-4 col-md-6">
-                <div class="card h-100 shadow-sm border-0 border-top border-primary border-4 hover-lift" style="transition: transform 0.3s ease;">
+                <div class="card h-100 shadow-sm border-0 border-top border-primary border-4 hover-lift">
                     <div class="card-body p-4 d-flex flex-column">
                         <div class="text-center mb-4">
                             <span class="badge bg-primary text-white rounded-pill px-3 py-2 mb-3">Tingkat SMA/SMK</span>
@@ -161,6 +161,8 @@
         document.addEventListener('DOMContentLoaded', function () {
             var groups = [
                 { selector: '#brosur .card',                extra: [],             stagger: 0 },
+                { selector: '#paketHarga > .text-center',   extra: [],             stagger: 0 },
+                { selector: '#paketHarga .card',            extra: [],             stagger: 0.15 },
                 { selector: '.col-lg-6:first-child .card',  extra: ['from-left'],  stagger: 0 },
                 { selector: '.col-lg-6:last-child .card',   extra: ['from-right'], stagger: 0 },
             ];

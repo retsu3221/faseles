@@ -70,10 +70,18 @@ class Auth extends CI_Controller {
 
     // Proses form register
     public function proses_register() {
-        $username = $this->input->post('username');
+        $username = $this->input->post('username', TRUE);
+        $email = $this->input->post('email', TRUE);
         $password = $this->input->post('password');
         $konfirmasi = $this->input->post('konfirmasi_password');
         $role = $this->input->post('role');
+
+        // Validasi email
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->session->set_flashdata('error', 'Format email tidak valid.');
+            redirect('auth/register');
+            return;
+        }
 
         // Validasi password cocok
         if ($password !== $konfirmasi) {
@@ -89,9 +97,17 @@ class Auth extends CI_Controller {
             return;
         }
 
+        // Cek email sudah dipakai
+        if ($this->Auth_model->email_exists($email)) {
+            $this->session->set_flashdata('error', 'Email sudah terdaftar, gunakan email lain.');
+            redirect('auth/register');
+            return;
+        }
+
         // Simpan user baru
         $this->Auth_model->simpan_user([
             'username' => $username,
+            'email'    => $email,
             'password' => password_hash($password, PASSWORD_BCRYPT),
             'role'     => $role,
         ]);

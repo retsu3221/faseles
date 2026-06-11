@@ -21,20 +21,7 @@ class Akun extends CI_Controller {
 
     // Halaman paket saya
     public function paket_saya() {
-        $label_kelas = [
-            'Privat1'   => 'Privat (45 Menit | 8x Pertemuan)',
-            'Privat2'   => 'Privat (60 Menit | 8x Pertemuan)',
-            'Kelompok1' => 'Kelompok (45 Menit | 8x Pertemuan)',
-            'Kelompok2' => 'Kelompok (60 Menit | 8x Pertemuan)',
-        ];
-        $harga = [
-            'TK'  => ['Privat1' => 330000, 'Privat2' => 430000, 'Kelompok1' => 290000, 'Kelompok2' => 380000],
-            'SMP' => ['Privat1' => 365000, 'Privat2' => 480000, 'Kelompok1' => 330000, 'Kelompok2' => 430000],
-            'SMA' => ['Privat1' => 440000, 'Privat2' => 580000, 'Kelompok1' => 405000, 'Kelompok2' => 530000],
-        ];
-        $data['paket']       = $this->Akun_model->get_paket_aktif($this->session->userdata('user_id'));
-        $data['label_kelas'] = $label_kelas;
-        $data['harga']       = $harga;
+        $data['paket'] = $this->Akun_model->get_paket_aktif($this->session->userdata('user_id'));
         $this->load->view('v_paket_saya', $data);
     }
 
@@ -43,7 +30,7 @@ class Akun extends CI_Controller {
         $data['pesanan'] = $this->Akun_model->get_pesanan($this->session->userdata('user_id'));
         $data['status_config'] = [
             'pending'    => ['label' => 'Menunggu Pembayaran', 'class' => 'bg-warning text-dark',  'icon' => 'bi-clock'],
-            'lunas'      => ['label' => 'Lunas',               'class' => 'bg-success text-white',  'icon' => 'bi-check-circle-fill'],
+            'diterima'   => ['label' => 'Lunas',               'class' => 'bg-success text-white',  'icon' => 'bi-check-circle-fill'],
             'ditolak'    => ['label' => 'Ditolak',             'class' => 'bg-danger text-white',   'icon' => 'bi-x-circle-fill'],
             'kadaluarsa' => ['label' => 'Kadaluarsa',          'class' => 'bg-secondary text-white','icon' => 'bi-calendar-x-fill'],
         ];

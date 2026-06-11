@@ -34,11 +34,12 @@
                 <?php else: ?>
                 <div class="d-flex flex-column gap-3">
                     <?php foreach ($paket as $item):
-                        $kelas     = $item['kelas'];
                         $tingkat   = $item['asal_sekolah'];
-                        $namaKelas = $label_kelas[$kelas] ?? $kelas;
-                        $biaya     = $harga[$tingkat][$kelas] ?? 0;
-                        $isPrivat  = strpos($kelas, 'Privat') !== false;
+                        $isPrivat  = ($item['tipe_kelas'] ?? '') === 'Privat';
+                        $namaKelas = !empty($item['tipe_kelas'])
+                            ? $item['tipe_kelas'] . ' (' . $item['durasi_menit'] . ' Menit | ' . $item['jumlah_pertemuan'] . 'x Pertemuan)'
+                            : '-';
+                        $biaya     = (int) ($item['harga'] ?? 0);
                     ?>
                     <div class="card border-0 shadow-sm rounded-4 overflow-hidden paket-item">
                         <div class="d-flex">

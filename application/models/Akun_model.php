@@ -28,20 +28,34 @@ class Akun_model extends CI_Model {
         $this->db->update('users', ['password' => $hashed_password], ['id' => $id]);
     }
 
+    // Status pembayaran diambil dari bukti_pembayaran terbaru.
+    // Belum ada bukti = 'pending'. ('diterima' setara lunas)
+    private function status_subquery() {
+        return "COALESCE((SELECT bp.status_verifikasi FROM bukti_pembayaran bp WHERE bp.pendaftaran_id = pendaftaran.id ORDER BY bp.uploaded_at DESC LIMIT 1), 'pending')";
+    }
+
     public function get_paket_aktif($user_id) {
+        $sub = $this->status_subquery();
         return $this->db
-            ->where('user_id', $user_id)
-            ->where('status_pembayaran', 'lunas')
-            ->order_by('tanggal_daftar', 'DESC')
-            ->get('pendaftaran')
+            ->select("pendaftaran.*, paket.tipe_kelas, paket.durasi_menit, paket.jumlah_pertemuan, paket.harga, $sub AS status_pembayaran", FALSE)
+            ->from('pendaftaran')
+            ->join('paket', 'paket.id = pendaftaran.paket_id', 'left')
+            ->where('pendaftaran.user_id', $user_id)
+            ->where("$sub = 'diterima'", NULL, FALSE)
+            ->order_by('pendaftaran.tanggal_daftar', 'DESC')
+            ->get()
             ->result_array();
     }
 
     public function get_pesanan($user_id) {
+        $sub = $this->status_subquery();
         return $this->db
-            ->where('user_id', $user_id)
-            ->order_by('tanggal_daftar', 'DESC')
-            ->get('pendaftaran')
+            ->select("pendaftaran.*, paket.tipe_kelas, paket.durasi_menit, paket.jumlah_pertemuan, paket.harga, $sub AS status_pembayaran", FALSE)
+            ->from('pendaftaran')
+            ->join('paket', 'paket.id = pendaftaran.paket_id', 'left')
+            ->where('pendaftaran.user_id', $user_id)
+            ->order_by('pendaftaran.tanggal_daftar', 'DESC')
+            ->get()
             ->result_array();
     }
 

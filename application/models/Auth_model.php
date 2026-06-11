@@ -23,6 +23,11 @@ class Auth_model extends CI_Model {
         return $this->db->get_where('users', ['username' => $username])->num_rows() > 0;
     }
 
+    // Cek apakah email sudah terdaftar
+    public function email_exists($email) {
+        return $this->db->get_where('users', ['email' => $email])->num_rows() > 0;
+    }
+
     // Simpan user baru ke tabel users
     public function simpan_user($data) {
         $this->db->insert('users', $data);

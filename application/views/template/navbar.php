@@ -10,7 +10,7 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav fw-bold ms-auto">
-                    <li class="nav-item"><a class="nav-link <?= $active === 'home' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran'); ?>">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $active === 'home' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran'); ?>">Home</a></li>
                     <li class="nav-item"><a class="nav-link <?= $active === 'tentang_kami' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran/tentang_kami'); ?>">About Us</a></li>
                     <li class="nav-item"><a class="nav-link <?= $active === 'fasilitas' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran/fasilitas'); ?>">Benefits</a></li>
                     <li class="nav-item"><a class="nav-link <?= $active === 'kontak_kami' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran/kontak_kami'); ?>">Contact Us</a></li>
