@@ -66,6 +66,26 @@
             </li>
         </ul>
 
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">Laporan</div>
+
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link <?= ($active_menu ?? '') === 'rekap_bulanan' ? 'active' : '' ?>"
+                   href="<?= site_url('admin/rekap_bulanan'); ?>">
+                    <i class="bi bi-calendar-month"></i>
+                    <span>Rekap Bulanan</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?= ($active_menu ?? '') === 'rekap_tahunan' ? 'active' : '' ?>"
+                   href="<?= site_url('admin/rekap_tahunan'); ?>">
+                    <i class="bi bi-calendar3"></i>
+                    <span>Rekap Tahunan</span>
+                </a>
+            </li>
+        </ul>
+
         <hr class="sidebar-divider d-none d-md-block">
 
         <div class="sidebar-toggler d-none d-md-flex justify-content-center mt-auto pb-3">

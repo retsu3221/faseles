@@ -28,8 +28,12 @@ class Admin extends CI_Controller {
             ) sub
         ")->row_array();
 
-        // --- Rekap bulanan tahun berjalan ---
-        $tahun_ini   = date('Y');
+        $tahun_ini = date('Y');
+        $bulan_ini = date('m');
+        $nama_bulan = ['','Januari','Februari','Maret','April','Mei','Juni',
+                       'Juli','Agustus','September','Oktober','November','Desember'];
+
+        // --- Data bulanan untuk grafik dashboard ---
         $bulanan_raw = $this->db->query("
             SELECT
                 MONTH(p.tanggal_daftar)  AS bulan,
@@ -45,14 +49,37 @@ class Admin extends CI_Controller {
                    )
             WHERE YEAR(p.tanggal_daftar) = {$tahun_ini}
             GROUP BY MONTH(p.tanggal_daftar)
-            ORDER BY bulan
         ")->result_array();
 
-        // Isi semua 12 bulan (default 0)
         $bulanan = array_fill(1, 12, ['total_daftar' => 0, 'total_pemasukan' => 0]);
         foreach ($bulanan_raw as $row) {
             $bulanan[(int)$row['bulan']] = $row;
         }
+
+        // --- Ringkasan bulan ini untuk dashboard ---
+        $rows_bulan = $this->db->query("
+            SELECT pk.harga,
+                   COALESCE(bp.status_verifikasi, 'belum_upload') AS status_verifikasi
+            FROM pendaftaran p
+            LEFT JOIN paket pk ON pk.id = p.paket_id
+            LEFT JOIN bukti_pembayaran bp
+                   ON bp.id = (
+                       SELECT id FROM bukti_pembayaran
+                       WHERE pendaftaran_id = p.id
+                       ORDER BY uploaded_at DESC LIMIT 1
+                   )
+            WHERE MONTH(p.tanggal_daftar) = {$bulan_ini}
+              AND YEAR(p.tanggal_daftar)  = {$tahun_ini}
+        ")->result_array();
+
+        $rekap_bulan = [
+            'total_daftar'    => count($rows_bulan),
+            'total_diterima'  => count(array_filter($rows_bulan, fn($r) => $r['status_verifikasi'] === 'diterima')),
+            'total_pending'   => count(array_filter($rows_bulan, fn($r) => $r['status_verifikasi'] === 'pending')),
+            'total_pemasukan' => array_sum(array_column(
+                array_filter($rows_bulan, fn($r) => $r['status_verifikasi'] === 'diterima'), 'harga'
+            )),
+        ];
 
         // --- Rekap tahunan ---
         $tahunan = $this->db->query("
@@ -87,13 +114,15 @@ class Admin extends CI_Controller {
         ")->result_array();
 
         $data = [
-            'page_title'    => 'Dashboard',
-            'active_menu'   => 'dashboard',
-            'stats'         => $stats,
-            'bulanan'       => $bulanan,
-            'tahun_ini'     => $tahun_ini,
-            'tahunan'       => $tahunan,
-            'recent'        => $recent,
+            'page_title'      => 'Dashboard',
+            'active_menu'     => 'dashboard',
+            'stats'           => $stats,
+            'rekap_bulan'     => $rekap_bulan,
+            'nama_bulan_ini'  => $nama_bulan[(int)$bulan_ini],
+            'tahun_ini'       => $tahun_ini,
+            'bulanan'         => $bulanan,
+            'tahunan'         => $tahunan,
+            'recent'          => $recent,
         ];
 
         $this->load->view('admin/v_dashboard', $data);
@@ -146,6 +175,129 @@ class Admin extends CI_Controller {
         ];
 
         $this->load->view('admin/v_detail_peserta', $data);
+    }
+
+    // ===== REKAP TAHUNAN =====
+
+    public function rekap_tahunan() {
+        $tahun_list = $this->db->query("
+            SELECT DISTINCT YEAR(tanggal_daftar) AS tahun FROM pendaftaran ORDER BY tahun DESC
+        ")->result_array();
+        if (empty($tahun_list)) $tahun_list = [['tahun' => date('Y')]];
+
+        $tahun_aktif = (int)($this->input->get('tahun') ?: date('Y'));
+
+        // Ringkasan per bulan untuk tahun yang dipilih
+        $bulanan = $this->db->query("
+            SELECT
+                MONTH(p.tanggal_daftar) AS bulan,
+                COUNT(p.id)             AS total_daftar,
+                SUM(CASE WHEN bp.status_verifikasi = 'diterima'   THEN 1 ELSE 0 END) AS total_diterima,
+                SUM(CASE WHEN bp.status_verifikasi = 'pending'    THEN 1 ELSE 0 END) AS total_pending,
+                SUM(CASE WHEN bp.status_verifikasi IN ('ditolak','kadaluarsa') THEN 1 ELSE 0 END) AS total_ditolak,
+                SUM(CASE WHEN bp.status_verifikasi = 'diterima'   THEN pk.harga ELSE 0 END) AS total_pemasukan
+            FROM pendaftaran p
+            LEFT JOIN paket pk ON pk.id = p.paket_id
+            LEFT JOIN bukti_pembayaran bp
+                   ON bp.id = (
+                       SELECT id FROM bukti_pembayaran
+                       WHERE pendaftaran_id = p.id
+                       ORDER BY uploaded_at DESC LIMIT 1
+                   )
+            WHERE YEAR(p.tanggal_daftar) = {$tahun_aktif}
+            GROUP BY MONTH(p.tanggal_daftar)
+            ORDER BY bulan
+        ")->result_array();
+
+        // Indeks per bulan (1–12) agar mudah dipetakan di view
+        $bulanan_map = [];
+        foreach ($bulanan as $b) {
+            $bulanan_map[(int)$b['bulan']] = $b;
+        }
+
+        // Summary keseluruhan tahun
+        $sum = $this->db->query("
+            SELECT
+                COUNT(p.id) AS total_daftar,
+                SUM(CASE WHEN bp.status_verifikasi = 'diterima'   THEN 1 ELSE 0 END) AS total_diterima,
+                SUM(CASE WHEN bp.status_verifikasi = 'pending'    THEN 1 ELSE 0 END) AS total_pending,
+                SUM(CASE WHEN bp.status_verifikasi IN ('ditolak','kadaluarsa') THEN 1 ELSE 0 END) AS total_ditolak,
+                SUM(CASE WHEN bp.status_verifikasi = 'diterima'   THEN pk.harga ELSE 0 END) AS total_pemasukan
+            FROM pendaftaran p
+            LEFT JOIN paket pk ON pk.id = p.paket_id
+            LEFT JOIN bukti_pembayaran bp
+                   ON bp.id = (
+                       SELECT id FROM bukti_pembayaran
+                       WHERE pendaftaran_id = p.id
+                       ORDER BY uploaded_at DESC LIMIT 1
+                   )
+            WHERE YEAR(p.tanggal_daftar) = {$tahun_aktif}
+        ")->row_array();
+
+        $data = [
+            'page_title'  => 'Rekap Tahunan',
+            'active_menu' => 'rekap_tahunan',
+            'tahun_list'  => $tahun_list,
+            'tahun_aktif' => $tahun_aktif,
+            'bulanan_map' => $bulanan_map,
+            'summary'     => $sum,
+        ];
+        $this->load->view('admin/v_rekap_tahunan', $data);
+    }
+
+    // ===== REKAP BULANAN =====
+
+    public function rekap_bulanan() {
+        $bulan = (int) ($this->input->get('bulan') ?: date('m'));
+        $tahun = (int) ($this->input->get('tahun') ?: date('Y'));
+
+        // Pendaftaran bulan ini beserta status pembayaran terbaru
+        $rows = $this->db->query("
+            SELECT p.no_transaksi, p.nama_lengkap, p.tanggal_daftar,
+                   pk.tingkat, pk.tipe_kelas, pk.harga,
+                   COALESCE(bp.status_verifikasi, 'belum_upload') AS status_verifikasi,
+                   bp.nama_pengirim, bp.jumlah_transfer, bp.tanggal_transfer
+            FROM pendaftaran p
+            LEFT JOIN paket pk ON pk.id = p.paket_id
+            LEFT JOIN bukti_pembayaran bp
+                   ON bp.id = (
+                       SELECT id FROM bukti_pembayaran
+                       WHERE pendaftaran_id = p.id
+                       ORDER BY uploaded_at DESC LIMIT 1
+                   )
+            WHERE MONTH(p.tanggal_daftar) = {$bulan}
+              AND YEAR(p.tanggal_daftar)  = {$tahun}
+            ORDER BY p.tanggal_daftar ASC
+        ")->result_array();
+
+        // Hitung summary
+        $summary = [
+            'total_daftar'    => count($rows),
+            'total_diterima'  => count(array_filter($rows, fn($r) => $r['status_verifikasi'] === 'diterima')),
+            'total_pending'   => count(array_filter($rows, fn($r) => $r['status_verifikasi'] === 'pending')),
+            'total_ditolak'   => count(array_filter($rows, fn($r) => in_array($r['status_verifikasi'], ['ditolak','kadaluarsa']))),
+            'total_pemasukan' => array_sum(array_column(
+                array_filter($rows, fn($r) => $r['status_verifikasi'] === 'diterima'), 'harga'
+            )),
+        ];
+
+        // Rentang tahun untuk dropdown
+        $tahun_list = $this->db->query("
+            SELECT DISTINCT YEAR(tanggal_daftar) AS tahun FROM pendaftaran ORDER BY tahun DESC
+        ")->result_array();
+        if (empty($tahun_list)) $tahun_list = [['tahun' => date('Y')]];
+
+        $data = [
+            'page_title'  => 'Rekap Bulanan',
+            'active_menu' => 'rekap_bulanan',
+            'rows'        => $rows,
+            'summary'     => $summary,
+            'bulan_aktif' => $bulan,
+            'tahun_aktif' => $tahun,
+            'tahun_list'  => $tahun_list,
+        ];
+
+        $this->load->view('admin/v_rekap_bulanan', $data);
     }
 
     // ===== PEMBAYARAN =====

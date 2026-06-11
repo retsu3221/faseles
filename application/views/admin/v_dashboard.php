@@ -64,20 +64,33 @@ $bulan_label = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov
 
 </div>
 
-<!-- ===== GRAFIK BULANAN + PENDAFTARAN TERBARU ===== -->
+<!-- ===== REKAP BULAN INI + PENDAFTARAN TERBARU ===== -->
 <div class="row g-4 mb-4">
 
-    <!-- Grafik -->
+    <!-- Grafik Bulanan -->
     <div class="col-lg-8">
         <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+            <div class="card-header bg-white d-flex align-items-center justify-content-between py-3 flex-wrap gap-2">
                 <h6 class="mb-0 fw-bold text-secondary">
-                    <i class="bi bi-bar-chart-fill me-2 text-primary"></i>Rekap Bulanan <?= $tahun_ini ?>
+                    <i class="bi bi-bar-chart-fill me-2 text-primary"></i>Grafik Bulanan <?= $tahun_ini ?>
                 </h6>
-                <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold">Tahun <?= $tahun_ini ?></span>
+                <div class="d-flex align-items-center gap-2">
+                    <!-- Toggle dataset -->
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-sm btn-primary active" id="btnPendaftaran">
+                            <i class="bi bi-people me-1"></i>Pendaftaran
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-success" id="btnPemasukan">
+                            <i class="bi bi-cash me-1"></i>Pemasukan
+                        </button>
+                    </div>
+                    <a href="<?= site_url('admin/rekap_bulanan') ?>" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-arrow-right me-1"></i>Lihat Detail
+                    </a>
+                </div>
             </div>
             <div class="card-body">
-                <canvas id="chartBulanan" height="110"></canvas>
+                <canvas id="chartBulanan" height="130"></canvas>
             </div>
         </div>
     </div>
@@ -89,7 +102,7 @@ $bulan_label = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov
                 <h6 class="mb-0 fw-bold text-secondary">
                     <i class="bi bi-clock-history me-2 text-primary"></i>Terbaru
                 </h6>
-                <a href="<?= site_url('admin/peserta') ?>" class="small text-primary text-decoration-none">Lihat semua</a>
+                <a href="<?= site_url('admin/pembayaran') ?>" class="small text-primary text-decoration-none">Lihat semua</a>
             </div>
             <div class="card-body p-0" style="overflow-y:auto;max-height:300px;">
                 <?php if (!empty($recent)): ?>
@@ -123,10 +136,13 @@ $bulan_label = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov
 
 <!-- ===== REKAP TAHUNAN ===== -->
 <div class="card shadow-sm border-0">
-    <div class="card-header bg-white py-3">
+    <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
         <h6 class="mb-0 fw-bold text-secondary">
             <i class="bi bi-calendar3 me-2 text-primary"></i>Rekap Tahunan
         </h6>
+        <a href="<?= site_url('admin/rekap_tahunan') ?>" class="btn btn-sm btn-outline-secondary">
+            <i class="bi bi-arrow-right me-1"></i>Lihat Detail
+        </a>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -189,32 +205,35 @@ $bulan_label = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov
     </div>
 </div>
 
+
 <!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
 (function () {
-    var labels   = <?= json_encode($bulan_label) ?>;
-    var daftar   = <?= json_encode(array_values(array_map(fn($b) => (int)$b['total_daftar'],   $bulanan))) ?>;
-    var pemasukan= <?= json_encode(array_values(array_map(fn($b) => (int)$b['total_pemasukan'], $bulanan))) ?>;
+    var labels    = <?= json_encode(['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des']) ?>;
+    var daftar    = <?= json_encode(array_values(array_map(fn($b) => (int)$b['total_daftar'],    $bulanan))) ?>;
+    var pemasukan = <?= json_encode(array_values(array_map(fn($b) => (int)$b['total_pemasukan'], $bulanan))) ?>;
 
-    new Chart(document.getElementById('chartBulanan'), {
+    var chart = new Chart(document.getElementById('chartBulanan'), {
+        type: 'bar',
         data: {
             labels: labels,
             datasets: [
                 {
-                    type: 'bar',
+                    id: 'pendaftaran',
                     label: 'Jumlah Pendaftaran',
                     data: daftar,
-                    backgroundColor: 'rgba(78,115,223,0.15)',
-                    borderColor: 'rgba(78,115,223,0.8)',
+                    backgroundColor: 'rgba(78,115,223,0.2)',
+                    borderColor: 'rgba(78,115,223,0.9)',
                     borderWidth: 2,
                     borderRadius: 6,
-                    yAxisID: 'yBar',
+                    hidden: false,
                 },
                 {
-                    type: 'line',
+                    id: 'pemasukan',
                     label: 'Pemasukan (Rp)',
                     data: pemasukan,
+                    type: 'line',
                     borderColor: '#1cc88a',
                     backgroundColor: 'rgba(28,200,138,0.08)',
                     borderWidth: 2.5,
@@ -222,6 +241,7 @@ $bulan_label = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov
                     pointRadius: 4,
                     tension: 0.4,
                     fill: true,
+                    hidden: true,
                     yAxisID: 'yLine',
                 }
             ]
@@ -230,11 +250,11 @@ $bulan_label = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov
             responsive: true,
             interaction: { mode: 'index', intersect: false },
             plugins: {
-                legend: { position: 'top', labels: { font: { size: 12 } } },
+                legend: { display: false },
                 tooltip: {
                     callbacks: {
                         label: function (ctx) {
-                            if (ctx.dataset.yAxisID === 'yLine') {
+                            if (ctx.datasetIndex === 1) {
                                 return ' Pemasukan: Rp ' + ctx.raw.toLocaleString('id-ID');
                             }
                             return ' Pendaftaran: ' + ctx.raw;
@@ -243,30 +263,58 @@ $bulan_label = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov
                 }
             },
             scales: {
-                yBar: {
-                    type: 'linear',
-                    position: 'left',
+                y: {
                     beginAtZero: true,
-                    ticks: { precision: 0, font: { size: 11 } },
+                    ticks: {
+                        precision: 0,
+                        font: { size: 13, weight: '600' },
+                        color: '#444',
+                    },
                     grid: { color: 'rgba(0,0,0,0.05)' },
-                    title: { display: true, text: 'Pendaftaran', font: { size: 11 } }
                 },
                 yLine: {
                     type: 'linear',
                     position: 'right',
                     beginAtZero: true,
+                    display: false,
+                    grace: '20%',
                     grid: { drawOnChartArea: false },
                     ticks: {
-                        font: { size: 11 },
+                        font: { size: 13, weight: '600' },
+                        color: '#1cc88a',
                         callback: function (v) {
                             return 'Rp ' + (v / 1000).toLocaleString('id-ID') + 'k';
                         }
                     },
-                    title: { display: true, text: 'Pemasukan', font: { size: 11 } }
                 },
                 x: { ticks: { font: { size: 11 } }, grid: { display: false } }
             }
         }
+    });
+
+    var btnDaftar   = document.getElementById('btnPendaftaran');
+    var btnMasuk    = document.getElementById('btnPemasukan');
+
+    // Toggle Pendaftaran
+    btnDaftar.addEventListener('click', function () {
+        chart.data.datasets[0].hidden = false;
+        chart.data.datasets[1].hidden = true;
+        chart.options.scales.y.display     = true;
+        chart.options.scales.yLine.display = false;
+        chart.update();
+        btnDaftar.classList.remove('btn-outline-primary'); btnDaftar.classList.add('btn-primary');    btnDaftar.classList.add('active');
+        btnMasuk.classList.remove('btn-success');          btnMasuk.classList.add('btn-outline-success'); btnMasuk.classList.remove('active');
+    });
+
+    // Toggle Pemasukan
+    btnMasuk.addEventListener('click', function () {
+        chart.data.datasets[0].hidden = true;
+        chart.data.datasets[1].hidden = false;
+        chart.options.scales.y.display     = false;
+        chart.options.scales.yLine.display = true;
+        chart.update();
+        btnMasuk.classList.remove('btn-outline-success'); btnMasuk.classList.add('btn-success');    btnMasuk.classList.add('active');
+        btnDaftar.classList.remove('btn-primary');        btnDaftar.classList.add('btn-outline-primary'); btnDaftar.classList.remove('active');
     });
 }());
 </script>
