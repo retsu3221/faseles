@@ -50,14 +50,14 @@ $this->load->view('admin/template/topbar', [
             <table class="table table-hover align-middle mb-0">
                 <thead class="bg-light">
                     <tr>
-                        <th class="ps-4" style="width:50px;">#</th>
-                        <th>No. Transaksi</th>
+                        <th class="ps-3" style="width:40px;">#</th>
+                        <th class="d-none d-md-table-cell">No. Transaksi</th>
                         <th>Nama Peserta</th>
-                        <th>Paket</th>
+                        <th class="d-none d-md-table-cell">Paket</th>
                         <th>Harga</th>
-                        <th>Status Bukti</th>
-                        <th>Tgl Daftar</th>
-                        <th class="text-center pe-4">Aksi</th>
+                        <th>Status</th>
+                        <th class="d-none d-md-table-cell">Tgl Daftar</th>
+                        <th class="text-center pe-3">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -91,21 +91,22 @@ $this->load->view('admin/template/topbar', [
                     $tingkat    = ($tingkatMap[$row['tingkat']] ?? $row['tingkat']) . ' · ' . $row['tipe_kelas'];
                 ?>
                 <tr>
-                    <td class="ps-4 text-muted small"><?= $no ?></td>
-                    <td class="small fw-semibold text-muted"><?= htmlspecialchars($row['no_transaksi'] ?? '-') ?></td>
+                    <td class="ps-3 text-muted small"><?= $no ?></td>
+                    <td class="small fw-semibold text-muted d-none d-md-table-cell"><?= htmlspecialchars($row['no_transaksi'] ?? '-') ?></td>
                     <td>
                         <div class="fw-semibold"><?= htmlspecialchars($row['nama_lengkap']) ?></div>
                         <div class="small text-muted"><?= htmlspecialchars($row['username'] ?? '') ?></div>
+                        <div class="small text-muted d-md-none"><?= htmlspecialchars($tingkat) ?></div>
                     </td>
-                    <td class="small"><?= htmlspecialchars($tingkat) ?></td>
-                    <td class="fw-semibold small">Rp <?= number_format($row['harga'] ?? 0, 0, ',', '.') ?></td>
+                    <td class="small d-none d-md-table-cell"><?= htmlspecialchars($tingkat) ?></td>
+                    <td class="fw-semibold small text-nowrap">Rp <?= number_format($row['harga'] ?? 0, 0, ',', '.') ?></td>
                     <td>
                         <span class="badge <?= $stCls ?> fw-semibold px-2 py-1">
                             <i class="bi <?= $stIcon ?> me-1"></i><?= $stLabel ?>
                         </span>
                     </td>
-                    <td class="text-muted small"><?= date('d M Y', strtotime($row['tanggal_daftar'])) ?></td>
-                    <td class="text-center pe-4">
+                    <td class="text-muted small d-none d-md-table-cell"><?= date('d M Y', strtotime($row['tanggal_daftar'])) ?></td>
+                    <td class="text-center pe-3 text-nowrap">
                         <?php if (!empty($row['bp_id'])): ?>
                         <button type="button"
                                 class="btn btn-sm btn-outline-info btn-lihat-bukti"

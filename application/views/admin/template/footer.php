@@ -37,7 +37,7 @@
             </div>
             <div class="modal-footer border-0 pt-0">
                 <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <a class="btn btn-sm btn-danger" href="<?= site_url('auth/logout'); ?>">
+                <a class="btn btn-sm btn-danger" href="<?= site_url('admin/logout'); ?>">
                     <i class="bi bi-box-arrow-right me-1"></i>Logout
                 </a>
             </div>
@@ -99,11 +99,12 @@ $flash_info    = $this->session->flashdata('info');
 
 <script>
 (function () {
-    var wrapper      = document.getElementById('wrapper');
-    var toggleBtn    = document.getElementById('sidebarToggle');
-    var toggleTop    = document.getElementById('sidebarToggleTop');
-    var toggleIcon   = document.getElementById('sidebarToggleIcon');
-    var scrollBtn    = document.getElementById('scrollTop');
+    var wrapper    = document.getElementById('wrapper');
+    var toggleBtn  = document.getElementById('sidebarToggle');
+    var toggleTop  = document.getElementById('sidebarToggleTop');
+    var toggleIcon = document.getElementById('sidebarToggleIcon');
+    var scrollBtn  = document.getElementById('scrollTop');
+    var isMobile   = function () { return window.innerWidth < 768; };
 
     function setSidebarIcon() {
         if (!toggleIcon) return;
@@ -112,23 +113,36 @@ $flash_info    = $this->session->flashdata('info');
             : 'bi bi-chevron-left';
     }
 
+    // Tombol chevron di dalam sidebar — desktop: collapse/expand, mobile: tutup
     if (toggleBtn) {
         toggleBtn.addEventListener('click', function () {
             wrapper.classList.toggle('sidebar-toggled');
             setSidebarIcon();
-            localStorage.setItem('adminSidebarToggled', wrapper.classList.contains('sidebar-toggled'));
+            if (!isMobile()) {
+                localStorage.setItem('adminSidebarToggled', wrapper.classList.contains('sidebar-toggled'));
+            }
         });
     }
 
+    // Hamburger di topbar (mobile: buka sidebar)
     if (toggleTop) {
         toggleTop.addEventListener('click', function () {
             wrapper.classList.toggle('sidebar-toggled');
-            setSidebarIcon();
         });
     }
 
-    // Restore sidebar state from localStorage
-    if (localStorage.getItem('adminSidebarToggled') === 'true') {
+    // Klik overlay untuk tutup sidebar (mobile)
+    document.addEventListener('click', function (e) {
+        if (!isMobile() || !wrapper.classList.contains('sidebar-toggled')) return;
+        var sidebar = document.getElementById('adminSidebar');
+        if (sidebar && !sidebar.contains(e.target) && toggleTop && !toggleTop.contains(e.target)) {
+            wrapper.classList.remove('sidebar-toggled');
+            setSidebarIcon();
+        }
+    });
+
+    // Restore state dari localStorage — desktop only
+    if (!isMobile() && localStorage.getItem('adminSidebarToggled') === 'true') {
         wrapper.classList.add('sidebar-toggled');
         setSidebarIcon();
     }

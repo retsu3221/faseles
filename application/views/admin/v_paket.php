@@ -9,30 +9,30 @@ $this->load->view('admin/template/topbar', [
 ?>
 
 <div class="card shadow-sm border-0">
-    <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="d-flex align-items-center gap-3">
-            <h6 class="mb-0 fw-bold text-secondary">
+    <div class="card-header bg-white py-3">
+        <div class="d-flex align-items-center flex-wrap gap-2">
+            <h6 class="mb-0 fw-bold text-secondary me-1">
                 <i class="bi bi-box-seam-fill me-2 text-primary"></i>Data Paket
             </h6>
             <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahPaket">
                 <i class="bi bi-plus-lg me-1"></i>Tambah Paket
             </button>
+            <span class="badge bg-primary rounded-pill ms-auto"><?= count($paket) ?> paket</span>
         </div>
-        <span class="badge bg-primary rounded-pill"><?= count($paket) ?> paket</span>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="bg-light">
                     <tr>
-                        <th class="ps-4" style="width:50px;">#</th>
+                        <th class="ps-3" style="width:40px;">#</th>
                         <th>Tingkat</th>
-                        <th>Tipe Kelas</th>
+                        <th>Tipe</th>
                         <th class="text-center">Durasi</th>
-                        <th class="text-center">Pertemuan</th>
+                        <th class="text-center d-none d-md-table-cell">Pertemuan</th>
                         <th>Harga</th>
-                        <th class="text-center">Status</th>
-                        <th class="text-center pe-4">Aksi</th>
+                        <th class="text-center d-none d-md-table-cell">Status</th>
+                        <th class="text-center pe-3">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -48,24 +48,24 @@ $this->load->view('admin/template/topbar', [
                     $tipeCls = $p['tipe_kelas'] === 'Privat' ? 'bg-primary text-white' : 'bg-success text-white';
                     ?>
                     <tr>
-                        <td class="ps-4 text-muted small"><?= $i + 1 ?></td>
+                        <td class="ps-3 text-muted small"><?= $i + 1 ?></td>
                         <td>
                             <span class="badge <?= $tCls ?> fw-semibold px-2 py-1"><?= $tLabel ?></span>
                         </td>
                         <td>
                             <span class="badge <?= $tipeCls ?> fw-semibold px-2 py-1"><?= $p['tipe_kelas'] ?></span>
                         </td>
-                        <td class="text-center fw-semibold"><?= $p['durasi_menit'] ?> mnt</td>
-                        <td class="text-center fw-semibold"><?= $p['jumlah_pertemuan'] ?>x</td>
-                        <td class="fw-bold text-dark">Rp <?= number_format($p['harga'], 0, ',', '.') ?></td>
-                        <td class="text-center">
+                        <td class="text-center fw-semibold small"><?= $p['durasi_menit'] ?> mnt</td>
+                        <td class="text-center fw-semibold small d-none d-md-table-cell"><?= $p['jumlah_pertemuan'] ?>x</td>
+                        <td class="fw-bold text-dark small text-nowrap">Rp <?= number_format($p['harga'], 0, ',', '.') ?></td>
+                        <td class="text-center d-none d-md-table-cell">
                             <?php if ($p['is_aktif']): ?>
                                 <span class="badge bg-success-subtle text-success fw-semibold">Aktif</span>
                             <?php else: ?>
                                 <span class="badge bg-secondary-subtle text-secondary fw-semibold">Nonaktif</span>
                             <?php endif; ?>
                         </td>
-                        <td class="text-center pe-4">
+                        <td class="text-center pe-3 text-nowrap">
                             <!-- Tombol Detail -->
                             <button type="button" class="btn btn-sm btn-outline-info me-1 btn-detail"
                                     title="Detail"

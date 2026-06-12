@@ -9,53 +9,56 @@ $this->load->view('admin/template/topbar', [
 ?>
 
 <div class="card shadow-sm border-0">
-    <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
-        <div class="d-flex align-items-center gap-3">
-            <h6 class="mb-0 fw-bold text-secondary">
+    <div class="card-header bg-white py-3">
+        <div class="d-flex align-items-center flex-wrap gap-2">
+            <h6 class="mb-0 fw-bold text-secondary me-1">
                 <i class="bi bi-people-fill me-2 text-primary"></i>Data Peserta
             </h6>
             <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahPeserta">
                 <i class="bi bi-plus-lg me-1"></i>Tambah Peserta
             </button>
+            <span class="badge bg-primary rounded-pill ms-auto"><?= count($users) ?> pengguna</span>
         </div>
-        <span class="badge bg-primary rounded-pill"><?= count($users) ?> pengguna</span>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0" id="tablePeserta">
                 <thead class="bg-light">
                     <tr>
-                        <th class="ps-4" style="width:50px;">#</th>
+                        <th class="ps-3" style="width:40px;">#</th>
                         <th>Username</th>
-                        <th>Email</th>
+                        <th class="d-none d-md-table-cell">Email</th>
                         <th>Role</th>
-                        <th class="text-center">Pendaftaran</th>
-                        <th>Bergabung</th>
-                        <th class="text-center pe-4">Aksi</th>
+                        <th class="text-center">Daftar</th>
+                        <th class="d-none d-md-table-cell">Bergabung</th>
+                        <th class="text-center pe-3">Aksi</th>
                     </tr>
                 </thead>
                 <tbody>
                 <?php if (!empty($users)): ?>
                     <?php foreach ($users as $i => $u): ?>
                     <tr>
-                        <td class="ps-4 text-muted small"><?= $i + 1 ?></td>
+                        <td class="ps-3 text-muted small"><?= $i + 1 ?></td>
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-primary bg-opacity-10"
+                                <div class="rounded-circle d-none d-md-flex align-items-center justify-content-center bg-primary bg-opacity-10"
                                      style="width:2rem;height:2rem;flex-shrink:0;">
                                     <i class="bi bi-person-fill text-primary" style="font-size:.85rem;"></i>
                                 </div>
-                                <span class="fw-semibold"><?= htmlspecialchars($u['username']) ?></span>
+                                <div>
+                                    <div class="fw-semibold"><?= htmlspecialchars($u['username']) ?></div>
+                                    <div class="small text-muted d-md-none"><?= htmlspecialchars($u['email']) ?></div>
+                                </div>
                             </div>
                         </td>
-                        <td class="text-muted small"><?= htmlspecialchars($u['email']) ?></td>
+                        <td class="text-muted small d-none d-md-table-cell"><?= htmlspecialchars($u['email']) ?></td>
                         <td>
                             <?php
                             $roleMap = [
-                                'siswa'   => ['bg-info bg-opacity-10 text-info',    'Siswa'],
-                                'ortu'    => ['bg-warning bg-opacity-10 text-warning', 'Orang Tua'],
-                                'pengajar'=> ['bg-success bg-opacity-10 text-success', 'Pengajar'],
-                                'admin'   => ['bg-danger bg-opacity-10 text-danger',  'Admin'],
+                                'siswa'   => ['bg-info bg-opacity-10 text-info',         'Siswa'],
+                                'ortu'    => ['bg-warning bg-opacity-10 text-warning',    'Orang Tua'],
+                                'pengajar'=> ['bg-success bg-opacity-10 text-success',    'Pengajar'],
+                                'admin'   => ['bg-danger bg-opacity-10 text-danger',      'Admin'],
                             ];
                             [$cls, $label] = $roleMap[$u['role']] ?? ['bg-secondary bg-opacity-10 text-secondary', ucfirst($u['role'])];
                             ?>
@@ -66,10 +69,10 @@ $this->load->view('admin/template/topbar', [
                                 <?= $u['jumlah_pendaftaran'] ?>
                             </span>
                         </td>
-                        <td class="text-muted small">
+                        <td class="text-muted small d-none d-md-table-cell">
                             <?= date('d M Y', strtotime($u['created_at'])) ?>
                         </td>
-                        <td class="text-center pe-4">
+                        <td class="text-center pe-3 text-nowrap">
                             <a href="<?= site_url('admin/detail_peserta/' . $u['id']) ?>"
                                class="btn btn-sm btn-outline-primary me-1" title="Detail">
                                 <i class="bi bi-eye"></i>

@@ -16,24 +16,30 @@
 
                     <!-- User Dropdown -->
                     <div class="dropdown">
+                        <?php
+                            $admin_nama     = $this->session->userdata('nama_lengkap') ?: ($this->session->userdata('username') ?: 'Admin');
+                            $admin_username = $this->session->userdata('username') ?: 'admin';
+                        ?>
                         <a href="#"
                            class="d-flex align-items-center gap-2 text-decoration-none"
                            data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="d-none d-lg-inline text-secondary small fw-bold">
-                                <?= htmlspecialchars($this->session->userdata('username') ?? 'Admin') ?>
-                            </span>
+                            <div class="d-none d-lg-block text-end">
+                                <div class="text-secondary small fw-bold lh-1"><?= htmlspecialchars($admin_nama) ?></div>
+                                <div class="text-muted" style="font-size:11px;">@<?= htmlspecialchars($admin_username) ?></div>
+                            </div>
                             <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center"
                                  style="width:2rem;height:2rem;flex-shrink:0;">
                                 <i class="bi bi-person-fill text-white"></i>
                             </div>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="min-width:200px;">
                             <li>
-                                <span class="dropdown-item-text small text-muted">
-                                    Login sebagai <strong><?= htmlspecialchars($this->session->userdata('username') ?? '') ?></strong>
-                                </span>
+                                <div class="px-3 py-2">
+                                    <div class="fw-bold text-dark small"><?= htmlspecialchars($admin_nama) ?></div>
+                                    <div class="text-muted" style="font-size:12px;">@<?= htmlspecialchars($admin_username) ?></div>
+                                </div>
                             </li>
-                            <li><hr class="dropdown-divider"></li>
+                            <li><hr class="dropdown-divider my-1"></li>
                             <li>
                                 <a class="dropdown-item text-danger" href="#"
                                    data-bs-toggle="modal" data-bs-target="#logoutModal">

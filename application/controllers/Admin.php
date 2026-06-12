@@ -3,8 +3,66 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Admin extends CI_Controller {
 
+    // Method yang boleh diakses tanpa login
+    private $public_methods = ['login', 'login_proses', 'setup_admin'];
+
     public function __construct() {
         parent::__construct();
+
+        $method = $this->router->fetch_method();
+        if (!in_array($method, $this->public_methods) && !$this->session->userdata('admin_logged_in')) {
+            redirect('admin/login');
+        }
+    }
+
+    // Halaman login admin
+    public function login() {
+        if ($this->session->userdata('admin_logged_in')) {
+            redirect('admin');
+        }
+        $this->load->view('admin/v_login');
+    }
+
+    // Proses login admin
+    public function login_proses() {
+        $username = $this->input->post('username', TRUE);
+        $password = $this->input->post('password');
+
+        $admin = $this->db->get_where('admin', ['username' => $username])->row_array();
+
+        if ($admin && password_verify($password, $admin['password'])) {
+            $this->session->set_userdata([
+                'admin_logged_in' => TRUE,
+                'admin_id'        => $admin['id'],
+                'username'        => $admin['username'],
+                'nama_lengkap'    => $admin['nama_lengkap'],
+            ]);
+            redirect('admin');
+        }
+
+        $this->session->set_flashdata('error', 'Username atau password salah.');
+        redirect('admin/login');
+    }
+
+    // Logout admin
+    public function logout() {
+        $this->session->unset_userdata(['admin_logged_in', 'admin_id', 'username', 'nama_lengkap']);
+        redirect('admin/login');
+    }
+
+    // Setup akun admin pertama — akses SEKALI lalu hapus method ini
+    public function setup_admin() {
+        $cek = $this->db->count_all('admin');
+        if ($cek > 0) {
+            echo 'Akun admin sudah ada. Hapus method setup_admin() dari controller.';
+            return;
+        }
+        $this->db->insert('admin', [
+            'username'     => 'admin',
+            'password'     => password_hash('admin123', PASSWORD_BCRYPT),
+            'nama_lengkap' => 'Administrator',
+        ]);
+        echo 'Akun admin berhasil dibuat.<br>Username: <b>admin</b><br>Password: <b>admin123</b><br><br>Segera hapus method setup_admin() dari controller!';
     }
 
     // Dashboard utama admin

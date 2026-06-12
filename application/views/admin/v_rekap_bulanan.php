@@ -116,25 +116,27 @@ $nama_bulan = ['','Januari','Februari','Maret','April','Mei','Juni',
 
     <!-- ===== TABEL ===== -->
     <div class="card shadow-sm border-0">
-        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between">
-            <h6 class="mb-0 fw-bold text-secondary">
-                <i class="bi bi-table me-2 text-primary"></i>
-                Detail Pendaftaran — <?= $nama_bulan[$bulan_aktif] ?> <?= $tahun_aktif ?>
-            </h6>
-            <span class="badge bg-primary rounded-pill"><?= $summary['total_daftar'] ?> data</span>
+        <div class="card-header bg-white py-3">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <h6 class="mb-0 fw-bold text-secondary">
+                    <i class="bi bi-table me-2 text-primary"></i>
+                    Detail Pendaftaran — <?= $nama_bulan[$bulan_aktif] ?> <?= $tahun_aktif ?>
+                </h6>
+                <span class="badge bg-primary rounded-pill ms-auto"><?= $summary['total_daftar'] ?> data</span>
+            </div>
         </div>
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="bg-light">
                         <tr>
-                            <th class="ps-4">#</th>
-                            <th>No. Transaksi</th>
+                            <th class="ps-3" style="width:40px;">#</th>
+                            <th class="d-none d-md-table-cell">No. Transaksi</th>
                             <th>Nama Peserta</th>
                             <th>Paket</th>
                             <th>Tgl Daftar</th>
                             <th>Status</th>
-                            <th class="text-end pe-4">Nominal</th>
+                            <th class="text-end pe-3">Nominal</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -151,13 +153,13 @@ $nama_bulan = ['','Januari','Februari','Maret','April','Mei','Juni',
                             $tingkat = ($r['tingkat'] ?? '-') . ' · ' . ($r['tipe_kelas'] ?? '-');
                         ?>
                         <tr>
-                            <td class="ps-4 text-muted small"><?= $i + 1 ?></td>
-                            <td class="small text-muted"><?= htmlspecialchars($r['no_transaksi'] ?? '-') ?></td>
+                            <td class="ps-3 text-muted small"><?= $i + 1 ?></td>
+                            <td class="small text-muted d-none d-md-table-cell"><?= htmlspecialchars($r['no_transaksi'] ?? '-') ?></td>
                             <td class="fw-semibold"><?= htmlspecialchars($r['nama_lengkap']) ?></td>
                             <td class="small"><?= htmlspecialchars($tingkat) ?></td>
-                            <td class="small text-muted"><?= date('d M Y', strtotime($r['tanggal_daftar'])) ?></td>
+                            <td class="small text-muted text-nowrap"><?= date('d M Y', strtotime($r['tanggal_daftar'])) ?></td>
                             <td><span class="badge <?= $stCls ?>"><?= $stLabel ?></span></td>
-                            <td class="text-end pe-4 fw-semibold <?= $r['status_verifikasi'] === 'diterima' ? 'text-success' : 'text-muted' ?>">
+                            <td class="text-end pe-3 fw-semibold text-nowrap <?= $r['status_verifikasi'] === 'diterima' ? 'text-success' : 'text-muted' ?>">
                                 <?= $r['status_verifikasi'] === 'diterima'
                                     ? 'Rp ' . number_format($r['harga'], 0, ',', '.')
                                     : '—' ?>
@@ -166,8 +168,9 @@ $nama_bulan = ['','Januari','Februari','Maret','April','Mei','Juni',
                         <?php endforeach; ?>
                         <!-- Baris total -->
                         <tr class="table-light fw-bold">
-                            <td colspan="6" class="ps-4 text-end">Total Pemasukan</td>
-                            <td class="text-end pe-4 text-success">
+                            <td colspan="3" class="ps-3 text-end d-md-none">Total Pemasukan</td>
+                            <td colspan="6" class="ps-3 text-end d-none d-md-table-cell">Total Pemasukan</td>
+                            <td class="text-end pe-3 text-success text-nowrap">
                                 Rp <?= number_format($summary['total_pemasukan'], 0, ',', '.') ?>
                             </td>
                         </tr>

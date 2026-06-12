@@ -1,0 +1,255 @@
+/* =========================================================
+   FASE Les — Admin Login CSS
+   ========================================================= */
+
+body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+    padding: 36px 40px;
+    width: 100%;
+    max-width: 400px;
+    margin: 20px;
+    animation: fadeUp 0.4s ease both;
+}
+
+@keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* LOGO */
+.login-logo {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.logo-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: #fff;
+    margin: 0 auto 12px;
+    box-shadow: 0 6px 18px rgba(78, 115, 223, 0.35);
+}
+
+.logo-name {
+    font-size: 20px;
+    font-weight: 900;
+    color: #4e73df;
+}
+
+.logo-name span { color: #f6c23e; }
+
+.logo-sub {
+    font-size: 11px;
+    color: #b7b9cc;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 3px;
+}
+
+.divider-line {
+    border: none;
+    border-top: 1px solid #e3e6f0;
+    margin: 20px 0;
+}
+
+/* FORM */
+.form-label {
+    font-size: 12px;
+    font-weight: 800;
+    color: #5a5c69;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.input-group-custom {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.input-icon {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b7b9cc;
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.form-control {
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 10px 13px 10px 38px;
+    border: 1.5px solid #e3e6f0;
+    border-radius: 8px;
+    color: #5a5c69;
+    transition: all 0.2s;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+}
+
+/* Input yang punya tombol toggle di kanan */
+.input-group-custom:has(.toggle-pass) .form-control {
+    padding-right: 42px;
+}
+
+.form-control:focus {
+    border-color: #4e73df;
+    box-shadow: 0 0 0 3px rgba(78, 115, 223, 0.1);
+}
+
+/* Sembunyikan ikon reveal bawaan browser (Edge/Chrome) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none;
+}
+
+.toggle-pass {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #b7b9cc;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.toggle-pass:hover { color: #4e73df; }
+
+/* OPTIONS */
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    font-size: 13px;
+}
+
+.custom-check {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    color: #858796;
+    font-weight: 600;
+}
+
+.custom-check input[type="checkbox"] {
+    accent-color: #4e73df;
+    width: 14px;
+    height: 14px;
+    cursor: pointer;
+}
+
+.forgot-link {
+    color: #4e73df;
+    font-weight: 700;
+    text-decoration: none;
+    font-size: 13px;
+}
+
+.forgot-link:hover { color: #224abe; }
+
+/* BUTTONS */
+.btn-login {
+    width: 100%;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 11px;
+    background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(78, 115, 223, 0.3);
+}
+
+.btn-login:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(78, 115, 223, 0.4);
+}
+
+.btn-back {
+    width: 100%;
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 9px;
+    background: transparent;
+    color: #b7b9cc;
+    border: 1.5px solid #e3e6f0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.btn-back:hover {
+    border-color: #4e73df;
+    color: #4e73df;
+    text-decoration: none;
+}
+
+/* ALERT ERROR */
+.login-alert {
+    font-size: 13px;
+    font-weight: 600;
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #fce8e6;
+    color: #c0392b;
+    border: 1px solid #f5c6cb;
+}
+
+.security-note {
+    text-align: center;
+    font-size: 11px;
+    color: #b7b9cc;
+    font-weight: 700;
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
