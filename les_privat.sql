@@ -74,7 +74,6 @@ CREATE TABLE `bukti_pembayaran` (
 
 LOCK TABLES `bukti_pembayaran` WRITE;
 /*!40000 ALTER TABLE `bukti_pembayaran` DISABLE KEYS */;
-INSERT INTO `bukti_pembayaran` VALUES (5,4,'4_1781196875.jpeg','Retsu Eka Titis',480000,'2026-06-09','Ini pembayaran','diterima','','2026-06-11 23:54:35','2026-06-11 17:17:23'),(6,5,'5_1781447234.jpeg','Retsu Eka Titis',290000,'2026-06-09','','diterima','','2026-06-14 21:27:14','2026-06-14 14:27:46');
 /*!40000 ALTER TABLE `bukti_pembayaran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -129,7 +128,7 @@ CREATE TABLE `pendaftaran` (
   KEY `fk_paket` (`paket_id`),
   CONSTRAINT `fk_paket` FOREIGN KEY (`paket_id`) REFERENCES `paket` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,7 +137,7 @@ CREATE TABLE `pendaftaran` (
 
 LOCK TABLES `pendaftaran` WRITE;
 /*!40000 ALTER TABLE `pendaftaran` DISABLE KEYS */;
-INSERT INTO `pendaftaran` VALUES (4,'FASE-20260609-00001',2,6,'Kamis','13:33:00','kadaluarsa','2026-06-09 11:33:10'),(5,'FASE-20260614-00001',2,3,'Rabu','09:17:00','pending','2026-06-14 21:25:32');
+INSERT INTO `pendaftaran` VALUES (8,'FASE-20260616-00001',2,6,'Kamis','02:04:00','pending','2026-06-16 22:05:27');
 /*!40000 ALTER TABLE `pendaftaran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -176,7 +175,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','admin@faseles.com','$2y$10$PQ.kv4BWBuFflmNbAuTEEun.I0.tC4c/xeVkswYIjy3KVjQYCDimW','pengajar','2026-06-05 14:45:37',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'retsu','retsuekatitiss@gmail.com','$2y$10$QY48uuGYNfu43OzwB2yXaOdKURMA0IDOwq/ZctucqBdEEqOXpxR4m','siswa','2026-06-05 21:46:20','Retsu','asdsadsa','2026-06-16','Laki-laki','asfasfsdfsdsdfdfdf','TK','sadasasdsad','34324234','asdsadsa'),(3,'Jahfal','jahfal@gmail.com','$2y$10$xUKbCZBwH5DHZJ6VXcJFZ.s0V6kVLvwXOvPeFFpV0DkOtcFLPE/x.','siswa','2026-06-11 12:10:01',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO `users` VALUES (1,'admin','admin@faseles.com','$2y$10$PQ.kv4BWBuFflmNbAuTEEun.I0.tC4c/xeVkswYIjy3KVjQYCDimW','pengajar','2026-06-05 14:45:37',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'retsu','retsuekatitiss@gmail.com','$2y$10$QY48uuGYNfu43OzwB2yXaOdKURMA0IDOwq/ZctucqBdEEqOXpxR4m','siswa','2026-06-05 21:46:20','Retsu','asdsadsa','2026-06-16','Laki-laki','asfasfsdfsdsdfdfdf','SMP','sadasasdsad','34324234999','asdsadsa'),(3,'Jahfal','jahfal@gmail.com','$2y$10$xUKbCZBwH5DHZJ6VXcJFZ.s0V6kVLvwXOvPeFFpV0DkOtcFLPE/x.','siswa','2026-06-11 12:10:01',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -189,4 +188,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-16 21:52:42
+-- Dump completed on 2026-06-16 22:16:08

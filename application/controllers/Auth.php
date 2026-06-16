@@ -70,15 +70,33 @@ class Auth extends CI_Controller {
 
     // Proses form register
     public function proses_register() {
-        $username = $this->input->post('username', TRUE);
-        $email = $this->input->post('email', TRUE);
-        $password = $this->input->post('password');
-        $konfirmasi = $this->input->post('konfirmasi_password');
-        $role = $this->input->post('role');
+        $username     = $this->input->post('username', TRUE);
+        $email        = $this->input->post('email', TRUE);
+        $nama_lengkap = $this->input->post('nama_lengkap', TRUE);
+        $password     = $this->input->post('password');
+        $konfirmasi   = $this->input->post('konfirmasi_password');
+
+        // Role hanya boleh siswa atau ortu — tidak bisa dimanipulasi
+        $role_post = $this->input->post('role');
+        $role = in_array($role_post, ['siswa', 'ortu']) ? $role_post : 'siswa';
+
+        // Validasi field wajib
+        if (empty($username) || empty($email) || empty($nama_lengkap) || empty($password)) {
+            $this->session->set_flashdata('error', 'Semua field wajib diisi.');
+            redirect('auth/register');
+            return;
+        }
 
         // Validasi email
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->session->set_flashdata('error', 'Format email tidak valid.');
+            redirect('auth/register');
+            return;
+        }
+
+        // Validasi panjang password
+        if (strlen($password) < 8) {
+            $this->session->set_flashdata('error', 'Password minimal 8 karakter.');
             redirect('auth/register');
             return;
         }
@@ -104,12 +122,21 @@ class Auth extends CI_Controller {
             return;
         }
 
-        // Simpan user baru
+        // Simpan user baru beserta data pribadi
         $this->Auth_model->simpan_user([
-            'username' => $username,
-            'email'    => $email,
-            'password' => password_hash($password, PASSWORD_BCRYPT),
-            'role'     => $role,
+            'username'      => $username,
+            'email'         => $email,
+            'password'      => password_hash($password, PASSWORD_BCRYPT),
+            'role'          => $role,
+            'nama_lengkap'  => $nama_lengkap,
+            'tempat_lahir'  => $this->input->post('tempat_lahir', TRUE),
+            'tanggal_lahir' => $this->input->post('tanggal_lahir'),
+            'jenis_kelamin' => $this->input->post('jenis_kelamin'),
+            'alamat'        => $this->input->post('alamat', TRUE),
+            'asal_sekolah'  => $this->input->post('asal_sekolah') ?: NULL,
+            'nama_ortu'     => $this->input->post('nama_ortu', TRUE) ?: NULL,
+            'no_wa_ortu'    => $this->input->post('no_wa_ortu') ?: NULL,
+            'pekerjaan_ortu'=> $this->input->post('pekerjaan_ortu', TRUE) ?: NULL,
         ]);
 
         $this->session->set_flashdata('success', 'Akun berhasil dibuat! Silakan login.');
