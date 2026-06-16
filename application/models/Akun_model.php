@@ -37,9 +37,12 @@ class Akun_model extends CI_Model {
     public function get_paket_aktif($user_id) {
         $sub = $this->status_subquery();
         return $this->db
-            ->select("pendaftaran.*, paket.tipe_kelas, paket.durasi_menit, paket.jumlah_pertemuan, paket.harga, $sub AS status_pembayaran", FALSE)
+            ->select("pendaftaran.*, paket.tipe_kelas, paket.durasi_menit, paket.jumlah_pertemuan, paket.harga,
+                      u.nama_lengkap, u.asal_sekolah, u.nama_ortu, u.no_wa_ortu,
+                      $sub AS status_pembayaran", FALSE)
             ->from('pendaftaran')
             ->join('paket', 'paket.id = pendaftaran.paket_id', 'left')
+            ->join('users u', 'u.id = pendaftaran.user_id', 'left')
             ->where('pendaftaran.user_id', $user_id)
             ->where("$sub = 'diterima'", NULL, FALSE)
             ->order_by('pendaftaran.tanggal_daftar', 'DESC')
@@ -50,9 +53,12 @@ class Akun_model extends CI_Model {
     public function get_pesanan($user_id) {
         $sub = $this->status_subquery();
         return $this->db
-            ->select("pendaftaran.*, paket.tipe_kelas, paket.durasi_menit, paket.jumlah_pertemuan, paket.harga, $sub AS status_pembayaran", FALSE)
+            ->select("pendaftaran.*, paket.tipe_kelas, paket.durasi_menit, paket.jumlah_pertemuan, paket.harga,
+                      u.nama_lengkap, u.asal_sekolah, u.nama_ortu, u.no_wa_ortu,
+                      $sub AS status_pembayaran", FALSE)
             ->from('pendaftaran')
             ->join('paket', 'paket.id = pendaftaran.paket_id', 'left')
+            ->join('users u', 'u.id = pendaftaran.user_id', 'left')
             ->where('pendaftaran.user_id', $user_id)
             ->order_by('pendaftaran.tanggal_daftar', 'DESC')
             ->get()

@@ -159,7 +159,7 @@ class Admin extends CI_Controller {
 
         // --- Pendaftaran terbaru ---
         $recent = $this->db->query("
-            SELECT p.nama_lengkap, p.tanggal_daftar, pk.tingkat, pk.tipe_kelas,
+            SELECT u.nama_lengkap, p.tanggal_daftar, pk.tingkat, pk.tipe_kelas,
                    COALESCE((
                        SELECT bp.status_verifikasi FROM bukti_pembayaran bp
                        WHERE bp.pendaftaran_id = p.id
@@ -167,6 +167,7 @@ class Admin extends CI_Controller {
                    ), 'belum_upload') AS status_verifikasi
             FROM pendaftaran p
             LEFT JOIN paket pk ON pk.id = p.paket_id
+            LEFT JOIN users u  ON u.id  = p.user_id
             ORDER BY p.tanggal_daftar DESC
             LIMIT 8
         ")->result_array();
@@ -216,11 +217,13 @@ class Admin extends CI_Controller {
         }
 
         $pendaftaran = $this->db->select('p.*, pk.tingkat, pk.tipe_kelas, pk.harga,
+            u.nama_lengkap,
             COALESCE((SELECT bp.status_verifikasi FROM bukti_pembayaran bp
                 WHERE bp.pendaftaran_id = p.id ORDER BY bp.uploaded_at DESC LIMIT 1
             ), "pending") AS status_verifikasi')
             ->from('pendaftaran p')
             ->join('paket pk', 'pk.id = p.paket_id', 'left')
+            ->join('users u', 'u.id = p.user_id', 'left')
             ->where('p.user_id', $id)
             ->order_by('p.tanggal_daftar', 'DESC')
             ->get()->result_array();
@@ -311,12 +314,13 @@ class Admin extends CI_Controller {
 
         // Pendaftaran bulan ini beserta status pembayaran terbaru
         $rows = $this->db->query("
-            SELECT p.no_transaksi, p.nama_lengkap, p.tanggal_daftar,
+            SELECT p.no_transaksi, u.nama_lengkap, p.tanggal_daftar,
                    pk.tingkat, pk.tipe_kelas, pk.harga,
                    COALESCE(bp.status_verifikasi, 'belum_upload') AS status_verifikasi,
                    bp.nama_pengirim, bp.jumlah_transfer, bp.tanggal_transfer
             FROM pendaftaran p
             LEFT JOIN paket pk ON pk.id = p.paket_id
+            LEFT JOIN users u  ON u.id  = p.user_id
             LEFT JOIN bukti_pembayaran bp
                    ON bp.id = (
                        SELECT id FROM bukti_pembayaran
@@ -365,7 +369,7 @@ class Admin extends CI_Controller {
             'page_title'  => 'Data Pembayaran',
             'active_menu' => 'pembayaran',
             'pendaftaran' => $this->db->query("
-                SELECT p.id, p.no_transaksi, p.nama_lengkap, p.tanggal_daftar,
+                SELECT p.id, p.no_transaksi, u.nama_lengkap, p.tanggal_daftar,
                        pk.tingkat, pk.tipe_kelas, pk.harga,
                        u.username,
                        bp.id              AS bp_id,

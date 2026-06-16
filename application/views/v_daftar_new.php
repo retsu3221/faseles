@@ -17,17 +17,20 @@
 
                             <div class="mb-3">
                                 <label class="form-label text-muted fw-bold">Nama Lengkap</label>
-                                <input type="text" name="nama_lengkap" class="form-control bg-light" required placeholder="Masukkan nama lengkap siswa">
+                                <input type="text" name="nama_lengkap" class="form-control bg-light" required placeholder="Masukkan nama lengkap siswa"
+                                       value="<?= htmlspecialchars($user_data->nama_lengkap ?? '') ?>">
                             </div>
 
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted fw-bold">Tempat Lahir</label>
-                                    <input type="text" name="tempat_lahir" class="form-control bg-light" required placeholder="Kota tempat lahir">
+                                    <input type="text" name="tempat_lahir" class="form-control bg-light" required placeholder="Kota tempat lahir"
+                                           value="<?= htmlspecialchars($user_data->tempat_lahir ?? '') ?>">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted fw-bold">Tanggal Lahir</label>
-                                    <input type="date" name="tanggal_lahir" class="form-control bg-light" required>
+                                    <input type="date" name="tanggal_lahir" class="form-control bg-light" required
+                                           value="<?= htmlspecialchars($user_data->tanggal_lahir ?? '') ?>">
                                 </div>
                             </div>
 
@@ -35,11 +38,13 @@
                                 <label class="form-label text-muted fw-bold d-block">Jenis Kelamin</label>
                                 <div class="d-flex gap-3 mt-1">
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="jenis_kelamin" value="Laki-laki" id="jkLaki">
+                                        <input class="form-check-input" type="radio" name="jenis_kelamin" value="Laki-laki" id="jkLaki"
+                                               <?= ($user_data->jenis_kelamin ?? '') === 'Laki-laki' ? 'checked' : '' ?>>
                                         <label class="form-check-label" for="jkLaki">Laki-laki</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="jenis_kelamin" value="Perempuan" id="jkPerempuan">
+                                        <input class="form-check-input" type="radio" name="jenis_kelamin" value="Perempuan" id="jkPerempuan"
+                                               <?= ($user_data->jenis_kelamin ?? '') === 'Perempuan' ? 'checked' : '' ?>>
                                         <label class="form-check-label" for="jkPerempuan">Perempuan</label>
                                     </div>
                                 </div>
@@ -47,24 +52,25 @@
 
                             <div class="mb-3">
                                 <label class="form-label text-muted fw-bold">Alamat Rumah</label>
-                                <textarea name="alamat" class="form-control bg-light" rows="2" required placeholder="Nama jalan, RT/RW, Kelurahan, Kecamatan..."></textarea>
+                                <textarea name="alamat" class="form-control bg-light" rows="2" required placeholder="Nama jalan, RT/RW, Kelurahan, Kecamatan..."><?= htmlspecialchars($user_data->alamat ?? '') ?></textarea>
                             </div>
 
                             <div class="form-section-title">&#128218; Data Sekolah & Paket Les</div>
 
                             <div class="mb-3">
                                 <label class="form-label text-muted fw-bold d-block">Tingkat Sekolah</label>
+                                <?php $asal = $user_data->asal_sekolah ?? ''; ?>
                                 <div class="d-flex gap-3 mt-1 flex-wrap">
                                     <div class="form-check">
-                                        <input class="form-check-input tingkat-sekolah" type="checkbox" name="asal_sekolah" value="TK" id="tingkatTK">
+                                        <input class="form-check-input tingkat-sekolah" type="checkbox" name="asal_sekolah" value="TK" id="tingkatTK" <?= $asal === 'TK' ? 'checked' : '' ?>>
                                         <label class="form-check-label" for="tingkatTK">TK & SD</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input tingkat-sekolah" type="checkbox" name="asal_sekolah" value="SMP" id="tingkatSMP">
+                                        <input class="form-check-input tingkat-sekolah" type="checkbox" name="asal_sekolah" value="SMP" id="tingkatSMP" <?= $asal === 'SMP' ? 'checked' : '' ?>>
                                         <label class="form-check-label" for="tingkatSMP">SMP / MTs</label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input tingkat-sekolah" type="checkbox" name="asal_sekolah" value="SMA" id="tingkatSMA">
+                                        <input class="form-check-input tingkat-sekolah" type="checkbox" name="asal_sekolah" value="SMA" id="tingkatSMA" <?= $asal === 'SMA' ? 'checked' : '' ?>>
                                         <label class="form-check-label" for="tingkatSMA">SMA / K</label>
                                     </div>
                                 </div>
@@ -107,7 +113,8 @@
 
                             <div class="mb-3">
                                 <label class="form-label text-muted fw-bold">Nama Lengkap Orang Tua / Wali</label>
-                                <input type="text" name="nama_ortu" class="form-control bg-light" required placeholder="Nama lengkap orang tua atau wali">
+                                <input type="text" name="nama_ortu" class="form-control bg-light" required placeholder="Nama lengkap orang tua atau wali"
+                                       value="<?= htmlspecialchars($user_data->nama_ortu ?? '') ?>">
                             </div>
 
                             <div class="row">
@@ -115,13 +122,15 @@
                                     <label class="form-label text-muted fw-bold">No. WhatsApp</label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light border-end-0">&#127470;&#127465; +62</span>
-                                        <input type="number" name="no_wa_ortu" class="form-control bg-light border-start-0" required placeholder="8xxxxxxxxxx">
+                                        <input type="number" name="no_wa_ortu" class="form-control bg-light border-start-0" required placeholder="8xxxxxxxxxx"
+                                               value="<?= htmlspecialchars($user_data->no_wa_ortu ?? '') ?>">
                                     </div>
                                     <p class="text-muted small mt-1 mb-0">*Tanpa angka 0 di depan</p>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-muted fw-bold">Pekerjaan</label>
-                                    <input type="text" name="pekerjaan_ortu" class="form-control bg-light" required placeholder="Contoh: Wiraswasta">
+                                    <input type="text" name="pekerjaan_ortu" class="form-control bg-light" required placeholder="Contoh: Wiraswasta"
+                                           value="<?= htmlspecialchars($user_data->pekerjaan_ortu ?? '') ?>">
                                 </div>
                             </div>
 

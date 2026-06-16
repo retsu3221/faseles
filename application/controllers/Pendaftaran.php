@@ -36,48 +36,66 @@ class Pendaftaran extends CI_Controller {
             $this->session->set_flashdata('warning', 'Silakan login terlebih dahulu untuk mengakses formulir pendaftaran.');
             redirect('auth/login');
         }
-        $data['paket'] = $this->Paket_model->get_aktif();
+        $data['paket']     = $this->Paket_model->get_aktif();
+        $data['user_data'] = $this->db->get_where('users', ['id' => $this->session->userdata('user_id')])->row();
         $this->load->view('v_daftar_new', $data);
     }
 
-   // Fungsi Logika untuk memproses form
+    // Fungsi Logika untuk memproses form
     public function proses_daftar() {
-        // Tangkap data dari form yang baru
+        if (!$this->session->userdata('logged_in')) {
+            redirect('auth/login');
+        }
+
+        $user_id = $this->session->userdata('user_id');
+
+        // Simpan data pribadi ke tabel users
+        $this->db->update('users', [
+            'nama_lengkap'   => $this->input->post('nama_lengkap', TRUE),
+            'tempat_lahir'   => $this->input->post('tempat_lahir', TRUE),
+            'tanggal_lahir'  => $this->input->post('tanggal_lahir'),
+            'jenis_kelamin'  => $this->input->post('jenis_kelamin'),
+            'alamat'         => $this->input->post('alamat', TRUE),
+            'asal_sekolah'   => $this->input->post('asal_sekolah'),
+            'nama_ortu'      => $this->input->post('nama_ortu', TRUE),
+            'no_wa_ortu'     => $this->input->post('no_wa_ortu'),
+            'pekerjaan_ortu' => $this->input->post('pekerjaan_ortu', TRUE),
+        ], ['id' => $user_id]);
+
+        // Generate no transaksi
         $tanggal      = date('Ymd');
         $count        = $this->Pendaftaran_model->count_hari_ini() + 1;
         $no_transaksi = 'FASE-' . $tanggal . '-' . str_pad($count, 5, '0', STR_PAD_LEFT);
 
-        $data = array(
-            'no_transaksi'   => $no_transaksi,
-            'user_id'        => $this->session->userdata('user_id'),
-            'nama_lengkap'   => $this->input->post('nama_lengkap'),
-            'tempat_lahir'   => $this->input->post('tempat_lahir'),
-            'tanggal_lahir'  => $this->input->post('tanggal_lahir'),
-			'jenis_kelamin'  => $this->input->post('jenis_kelamin'),
-            'alamat'         => $this->input->post('alamat'),
-			'asal_sekolah'   => $this->input->post('asal_sekolah'),
-			'paket_id'       => $this->input->post('paket_id'),
-			'jadwal_hari'    => $this->input->post('jadwal'),
-            'jadwal_jam'     => $this->input->post('jam'),
-			'nama_ortu'      => $this->input->post('nama_ortu'),
-            'no_wa_ortu'     => $this->input->post('no_wa_ortu'),
-            'pekerjaan_ortu' => $this->input->post('pekerjaan_ortu'),
-        );
+        // Simpan data pendaftaran (hanya field spesifik registrasi)
+        $id_pendaftar = $this->Pendaftaran_model->simpan_data([
+            'no_transaksi' => $no_transaksi,
+            'user_id'      => $user_id,
+            'paket_id'     => $this->input->post('paket_id'),
+            'jadwal_hari'  => $this->input->post('jadwal'),
+            'jadwal_jam'   => $this->input->post('jam'),
+        ]);
 
-        // Simpan ke database melalui Model dan ambil ID-nya
-        $id_pendaftar = $this->Pendaftaran_model->simpan_data($data);
-
-        // Alihkan ke halaman pembayaran
         redirect('pendaftaran/pembayaran/' . $id_pendaftar);
     }
 
     // Halaman pembayaran
     public function pembayaran($id) {
+        if (!$this->session->userdata('logged_in')) {
+            $this->session->set_flashdata('warning', 'Silakan login terlebih dahulu.');
+            redirect('auth/login');
+        }
+
         $pendaftaran = $this->Pendaftaran_model->get_data_by_id($id);
 
         if (!$pendaftaran) {
             $this->session->set_flashdata('error', 'Data pendaftaran tidak ditemukan.');
             redirect('pendaftaran/daftar');
+        }
+
+        if ((int)$pendaftaran['user_id'] !== (int)$this->session->userdata('user_id')) {
+            $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke halaman ini.');
+            redirect('pendaftaran');
         }
 
         $paket = $this->Paket_model->get_by_id($pendaftaran['paket_id']);

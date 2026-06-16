@@ -65,7 +65,7 @@ CREATE TABLE `bukti_pembayaran` (
   PRIMARY KEY (`id`),
   KEY `fk_bukti_pendaftaran` (`pendaftaran_id`),
   CONSTRAINT `fk_bukti_pendaftaran` FOREIGN KEY (`pendaftaran_id`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -74,7 +74,7 @@ CREATE TABLE `bukti_pembayaran` (
 
 LOCK TABLES `bukti_pembayaran` WRITE;
 /*!40000 ALTER TABLE `bukti_pembayaran` DISABLE KEYS */;
-INSERT INTO `bukti_pembayaran` VALUES (5,4,'4_1781196875.jpeg','Retsu Eka Titis',480000,'2026-06-09','Ini pembayaran','diterima','','2026-06-11 23:54:35','2026-06-11 17:17:23');
+INSERT INTO `bukti_pembayaran` VALUES (5,4,'4_1781196875.jpeg','Retsu Eka Titis',480000,'2026-06-09','Ini pembayaran','diterima','','2026-06-11 23:54:35','2026-06-11 17:17:23'),(6,5,'5_1781447234.jpeg','Retsu Eka Titis',290000,'2026-06-09','','diterima','','2026-06-14 21:27:14','2026-06-14 14:27:46');
 /*!40000 ALTER TABLE `bukti_pembayaran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -118,18 +118,9 @@ CREATE TABLE `pendaftaran` (
   `id` int NOT NULL AUTO_INCREMENT,
   `no_transaksi` varchar(25) DEFAULT NULL,
   `user_id` int NOT NULL,
-  `nama_lengkap` varchar(100) NOT NULL,
-  `tempat_lahir` varchar(50) NOT NULL,
-  `tanggal_lahir` date NOT NULL,
-  `jenis_kelamin` varchar(15) NOT NULL,
-  `alamat` text NOT NULL,
-  `asal_sekolah` varchar(10) NOT NULL,
   `paket_id` int NOT NULL,
   `jadwal_hari` varchar(15) NOT NULL,
   `jadwal_jam` time NOT NULL,
-  `nama_ortu` varchar(100) NOT NULL,
-  `no_wa_ortu` varchar(20) NOT NULL,
-  `pekerjaan_ortu` varchar(50) NOT NULL,
   `status_pembayaran` enum('pending','lunas','ditolak','kadaluarsa') NOT NULL DEFAULT 'pending',
   `tanggal_daftar` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -138,7 +129,7 @@ CREATE TABLE `pendaftaran` (
   KEY `fk_paket` (`paket_id`),
   CONSTRAINT `fk_paket` FOREIGN KEY (`paket_id`) REFERENCES `paket` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -147,7 +138,7 @@ CREATE TABLE `pendaftaran` (
 
 LOCK TABLES `pendaftaran` WRITE;
 /*!40000 ALTER TABLE `pendaftaran` DISABLE KEYS */;
-INSERT INTO `pendaftaran` VALUES (4,'FASE-20260609-00001',2,'Retsu','Bogor','2026-06-11','Perempuan','asdsada','SMP',6,'Kamis','13:33:00','Maryono','21321321','Wiraswasta','kadaluarsa','2026-06-09 11:33:10');
+INSERT INTO `pendaftaran` VALUES (4,'FASE-20260609-00001',2,6,'Kamis','13:33:00','kadaluarsa','2026-06-09 11:33:10'),(5,'FASE-20260614-00001',2,3,'Rabu','09:17:00','pending','2026-06-14 21:25:32');
 /*!40000 ALTER TABLE `pendaftaran` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -165,6 +156,15 @@ CREATE TABLE `users` (
   `password` varchar(255) NOT NULL,
   `role` enum('siswa','ortu','pengajar') DEFAULT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
+  `nama_lengkap` varchar(100) DEFAULT NULL,
+  `tempat_lahir` varchar(50) DEFAULT NULL,
+  `tanggal_lahir` date DEFAULT NULL,
+  `jenis_kelamin` varchar(15) DEFAULT NULL,
+  `alamat` text,
+  `asal_sekolah` varchar(10) DEFAULT NULL,
+  `nama_ortu` varchar(100) DEFAULT NULL,
+  `no_wa_ortu` varchar(20) DEFAULT NULL,
+  `pekerjaan_ortu` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -176,7 +176,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'admin','admin@faseles.com','$2y$10$PQ.kv4BWBuFflmNbAuTEEun.I0.tC4c/xeVkswYIjy3KVjQYCDimW','pengajar','2026-06-05 14:45:37'),(2,'retsu','retsuekatitiss@gmail.com','$2y$10$QY48uuGYNfu43OzwB2yXaOdKURMA0IDOwq/ZctucqBdEEqOXpxR4m','siswa','2026-06-05 21:46:20'),(3,'Jahfal','jahfal@gmail.com','$2y$10$xUKbCZBwH5DHZJ6VXcJFZ.s0V6kVLvwXOvPeFFpV0DkOtcFLPE/x.','siswa','2026-06-11 12:10:01');
+INSERT INTO `users` VALUES (1,'admin','admin@faseles.com','$2y$10$PQ.kv4BWBuFflmNbAuTEEun.I0.tC4c/xeVkswYIjy3KVjQYCDimW','pengajar','2026-06-05 14:45:37',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(2,'retsu','retsuekatitiss@gmail.com','$2y$10$QY48uuGYNfu43OzwB2yXaOdKURMA0IDOwq/ZctucqBdEEqOXpxR4m','siswa','2026-06-05 21:46:20','Retsu','asdsadsa','2026-06-16','Laki-laki','asfasfsdfsdsdfdfdf','TK','sadasasdsad','34324234','asdsadsa'),(3,'Jahfal','jahfal@gmail.com','$2y$10$xUKbCZBwH5DHZJ6VXcJFZ.s0V6kVLvwXOvPeFFpV0DkOtcFLPE/x.','siswa','2026-06-11 12:10:01',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -189,4 +189,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-12 21:21:59
+-- Dump completed on 2026-06-16 21:52:42
