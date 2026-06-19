@@ -31,19 +31,28 @@ $this->load->view('admin/template/topbar', [
 </div>
 
 <div class="card shadow-sm border-0">
-    <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
-        <h6 class="mb-0 fw-bold text-secondary">
-            <i class="bi bi-credit-card-fill me-2 text-primary"></i>Data Pembayaran
-        </h6>
-        <?php
-        $total = count($pendaftaran);
-        $filtered = array_filter($pendaftaran, function($r) use ($filter) {
-            if ($filter === 'semua') return true;
-            if ($filter === 'belum_upload') return empty($r['bp_id']);
-            return !empty($r['bp_id']) && $r['status_verifikasi'] === $filter;
-        });
-        ?>
-        <span class="badge bg-primary rounded-pill"><?= count($filtered) ?> data</span>
+    <div class="card-header bg-white py-3">
+        <div class="d-flex align-items-center flex-wrap gap-2">
+            <h6 class="mb-0 fw-bold text-secondary">
+                <i class="bi bi-credit-card-fill me-2 text-primary"></i>Data Pembayaran
+            </h6>
+            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahPembayaran">
+                <i class="bi bi-plus-lg me-1"></i>Tambah Pembayaran
+            </button>
+            <div class="input-group input-group-sm" style="max-width:220px;">
+                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" id="searchPembayaran" class="form-control bg-light border-start-0"
+                       placeholder="Cari nama, no. transaksi...">
+            </div>
+            <?php
+            $filtered = array_filter($pendaftaran, function($r) use ($filter) {
+                if ($filter === 'semua') return true;
+                if ($filter === 'belum_upload') return empty($r['bp_id']);
+                return !empty($r['bp_id']) && $r['status_verifikasi'] === $filter;
+            });
+            ?>
+            <span class="badge bg-primary rounded-pill ms-auto" id="jumlahPembayaran"><?= count($filtered) ?> data</span>
+        </div>
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
@@ -90,7 +99,11 @@ $this->load->view('admin/template/topbar', [
                     $tingkatMap = ['TK' => 'TK & SD', 'SMP' => 'SMP/MTs', 'SMA' => 'SMA/SMK'];
                     $tingkat    = ($tingkatMap[$row['tingkat']] ?? $row['tingkat']) . ' · ' . $row['tipe_kelas'];
                 ?>
-                <tr>
+                <tr class="pembayaran-row" data-search="<?= strtolower(htmlspecialchars(
+                    ($row['nama_lengkap'] ?? '') . ' ' . ($row['username'] ?? '') . ' ' .
+                    ($row['no_transaksi'] ?? '') . ' ' . $tingkat . ' ' .
+                    ($row['nama_pengirim'] ?? '') . ' ' . $stLabel
+                )) ?>">
                     <td class="ps-3 text-muted small"><?= $no ?></td>
                     <td class="small fw-semibold text-muted d-none d-md-table-cell"><?= htmlspecialchars($row['no_transaksi'] ?? '-') ?></td>
                     <td>
@@ -124,7 +137,14 @@ $this->load->view('admin/template/topbar', [
                             <i class="bi bi-eye"></i>
                         </button>
                         <?php else: ?>
-                        <span class="text-muted small">—</span>
+                        <button type="button"
+                                class="btn btn-sm btn-outline-primary btn-upload-admin"
+                                title="Upload Bukti"
+                                data-id="<?= $row['id'] ?>"
+                                data-nama="<?= htmlspecialchars($row['nama_lengkap']) ?>"
+                                data-harga="<?= number_format($row['harga'] ?? 0, 0, ',', '.') ?>">
+                            <i class="bi bi-upload"></i>
+                        </button>
                         <?php endif; ?>
                     </td>
                 </tr>
@@ -139,6 +159,178 @@ $this->load->view('admin/template/topbar', [
                 <?php endif; ?>
                 </tbody>
             </table>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL TAMBAH PEMBAYARAN ===== -->
+<div class="modal fade" id="modalTambahPembayaran" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h6 class="modal-title fw-bold">
+                    <i class="bi bi-plus-circle-fill me-1 text-primary"></i>Tambah Pembayaran
+                </h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form action="<?= site_url('admin/tambah_pembayaran') ?>" method="post" enctype="multipart/form-data">
+                <div class="modal-body p-4" style="max-height:75vh;overflow-y:auto;">
+
+                    <p class="fw-bold text-primary small text-uppercase mb-2">
+                        <i class="bi bi-person-fill me-1"></i>Data Pendaftaran
+                    </p>
+                    <div class="row g-3 mb-4">
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">User <span class="text-danger">*</span></label>
+                            <select name="user_id" class="form-select" required>
+                                <option value="" disabled selected>-- Pilih User --</option>
+                                <?php foreach ($users as $u): ?>
+                                <option value="<?= $u['id'] ?>">
+                                    <?= htmlspecialchars($u['nama_lengkap'] ?: $u['username']) ?>
+                                    (@<?= htmlspecialchars($u['username']) ?>)
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Paket <span class="text-danger">*</span></label>
+                            <select name="paket_id" class="form-select" required>
+                                <option value="" disabled selected>-- Pilih Paket --</option>
+                                <?php foreach ($paket as $pk): ?>
+                                <option value="<?= $pk['id'] ?>">
+                                    <?= htmlspecialchars($pk['tingkat']) ?> — <?= htmlspecialchars($pk['tipe_kelas']) ?>
+                                    (Rp <?= number_format($pk['harga'], 0, ',', '.') ?>)
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Preferensi Hari</label>
+                            <select name="jadwal_hari" class="form-select">
+                                <option value="">-- Pilih Hari (opsional) --</option>
+                                <?php foreach (['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'] as $h): ?>
+                                <option value="<?= $h ?>"><?= $h ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Preferensi Jam</label>
+                            <input type="time" name="jadwal_jam" class="form-control">
+                        </div>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <p class="fw-bold text-secondary small text-uppercase mb-2">
+                        <i class="bi bi-receipt me-1"></i>Bukti Pembayaran
+                        <span class="text-muted fw-normal text-lowercase">(opsional)</span>
+                    </p>
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label fw-semibold small">File Bukti</label>
+                            <input type="file" name="file_bukti" class="form-control"
+                                   accept="image/jpeg,image/png,image/gif,image/webp,application/pdf">
+                            <div class="form-text">JPG, PNG, PDF, GIF, WebP maks. 2MB</div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Nama Pengirim</label>
+                            <input type="text" name="nama_pengirim" class="form-control" placeholder="Nama pemilik rekening">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Jumlah Transfer</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" name="jumlah_transfer" class="form-control" placeholder="0">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Tanggal Transfer</label>
+                            <input type="date" name="tanggal_transfer" class="form-control">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Status Verifikasi</label>
+                            <select name="status_verifikasi" class="form-select">
+                                <option value="pending">Pending</option>
+                                <option value="diterima">Langsung Diterima</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label fw-semibold small">Catatan</label>
+                            <textarea name="catatan" class="form-control" rows="2" placeholder="Catatan tambahan (opsional)"></textarea>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-check-lg me-1"></i>Simpan
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ===== MODAL UPLOAD BUKTI OLEH ADMIN ===== -->
+<div class="modal fade" id="modalUploadAdmin" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-0 py-3" style="background:linear-gradient(135deg,#0d6efd,#0dcaf0);">
+                <div class="d-flex flex-column justify-content-center">
+                    <h6 class="modal-title fw-bold text-white mb-1">
+                        <i class="bi bi-upload me-1"></i>Upload Bukti Pembayaran
+                    </h6>
+                    <small class="text-white opacity-75" id="ua_nama"></small>
+                </div>
+                <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="formUploadAdmin" method="post" enctype="multipart/form-data">
+                <div class="modal-body p-4">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">File Bukti <span class="text-danger">*</span></label>
+                        <input type="file" name="file_bukti" class="form-control"
+                               accept="image/jpeg,image/png,image/gif,image/webp,application/pdf" required>
+                        <div class="form-text">JPG, PNG, PDF, GIF, WebP maks. 2MB</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Nama Pengirim</label>
+                        <input type="text" name="nama_pengirim" class="form-control"
+                               placeholder="Nama pemilik rekening pengirim">
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <label class="form-label fw-semibold small">Jumlah Transfer</label>
+                            <div class="input-group">
+                                <span class="input-group-text">Rp</span>
+                                <input type="number" name="jumlah_transfer" class="form-control"
+                                       placeholder="0" id="ua_jumlah">
+                            </div>
+                            <div class="form-text" id="ua_harga_hint"></div>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label fw-semibold small">Tanggal Transfer</label>
+                            <input type="date" name="tanggal_transfer" class="form-control">
+                        </div>
+                    </div>
+
+                    <div class="mb-1">
+                        <label class="form-label fw-semibold small">Catatan (opsional)</label>
+                        <textarea name="catatan" class="form-control" rows="2"
+                                  placeholder="Catatan tambahan..."></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="bi bi-upload me-1"></i>Upload Bukti
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -232,6 +424,30 @@ $this->load->view('admin/template/topbar', [
 </div>
 
 <script>
+document.getElementById('searchPembayaran').addEventListener('input', function () {
+    var q    = this.value.toLowerCase().trim();
+    var rows = document.querySelectorAll('.pembayaran-row');
+    var shown = 0;
+    rows.forEach(function (row) {
+        var match = !q || row.dataset.search.includes(q);
+        row.style.display = match ? '' : 'none';
+        if (match) shown++;
+    });
+    document.getElementById('jumlahPembayaran').textContent = shown + ' data';
+});
+
+document.querySelectorAll('.btn-upload-admin').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        var d = this.dataset;
+        document.getElementById('ua_nama').textContent       = d.nama;
+        document.getElementById('ua_harga_hint').textContent = 'Harga paket: Rp ' + d.harga;
+        document.getElementById('ua_jumlah').value           = '';
+        document.getElementById('formUploadAdmin').action    =
+            '<?= site_url('admin/upload_bukti_admin/') ?>' + d.id;
+        new bootstrap.Modal(document.getElementById('modalUploadAdmin')).show();
+    });
+});
+
 document.querySelectorAll('.btn-lihat-bukti').forEach(function (btn) {
     btn.addEventListener('click', function () {
         var d = this.dataset;

@@ -17,7 +17,12 @@ $this->load->view('admin/template/topbar', [
             <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#modalTambahPaket">
                 <i class="bi bi-plus-lg me-1"></i>Tambah Paket
             </button>
-            <span class="badge bg-primary rounded-pill ms-auto"><?= count($paket) ?> paket</span>
+            <div class="input-group input-group-sm" style="max-width:220px;">
+                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                <input type="text" id="searchPaket" class="form-control bg-light border-start-0"
+                       placeholder="Cari tingkat, tipe...">
+            </div>
+            <span class="badge bg-primary rounded-pill ms-auto" id="jumlahPaket"><?= count($paket) ?> paket</span>
         </div>
     </div>
     <div class="card-body p-0">
@@ -47,7 +52,11 @@ $this->load->view('admin/template/topbar', [
                     [$tCls, $tLabel] = $tingkatMap[$p['tingkat']] ?? ['bg-secondary bg-opacity-10 text-secondary', $p['tingkat']];
                     $tipeCls = $p['tipe_kelas'] === 'Privat' ? 'bg-primary text-white' : 'bg-success text-white';
                     ?>
-                    <tr>
+                    <tr class="paket-row" data-search="<?= strtolower(htmlspecialchars(
+                        $tLabel . ' ' . $p['tipe_kelas'] . ' ' . $p['durasi_menit'] . ' ' .
+                        $p['jumlah_pertemuan'] . ' ' . $p['harga'] . ' ' .
+                        ($p['is_aktif'] ? 'aktif' : 'nonaktif')
+                    )) ?>">
                         <td class="ps-3 text-muted small"><?= $i + 1 ?></td>
                         <td>
                             <span class="badge <?= $tCls ?> fw-semibold px-2 py-1"><?= $tLabel ?></span>
@@ -310,6 +319,19 @@ $this->load->view('admin/template/topbar', [
 </div>
 
 <script>
+// --- Search ---
+document.getElementById('searchPaket').addEventListener('input', function () {
+    var q    = this.value.toLowerCase().trim();
+    var rows = document.querySelectorAll('.paket-row');
+    var shown = 0;
+    rows.forEach(function (row) {
+        var match = !q || row.dataset.search.includes(q);
+        row.style.display = match ? '' : 'none';
+        if (match) shown++;
+    });
+    document.getElementById('jumlahPaket').textContent = shown + ' paket';
+});
+
 // --- Detail ---
 document.querySelectorAll('.btn-detail').forEach(function (btn) {
     btn.addEventListener('click', function () {

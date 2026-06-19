@@ -53,13 +53,6 @@
             </div>
         </div>
 
-        <div class="form-options">
-            <label class="custom-check">
-                <input type="checkbox" name="remember">
-                <span>Ingat saya</span>
-            </label>
-        </div>
-
         <button type="submit" class="btn-login">
             <i class="bi bi-box-arrow-in-right"></i> Masuk
         </button>

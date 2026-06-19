@@ -55,12 +55,12 @@ class Auth extends CI_Controller {
 
         if ($user) {
             $this->session->set_userdata([
-                'logged_in' => true,
-                'user_id'   => $user->id,
-                'username'  => $user->username,
-                'role'      => $user->role,
+                'logged_in'    => true,
+                'user_id'      => $user->id,
+                'username'     => $user->username,
+                'nama_lengkap' => $user->nama_lengkap,
             ]);
-            $this->session->set_flashdata('success', 'Selamat datang ' . $user->username);
+            $this->session->set_flashdata('success', 'Selamat datang ' . ($user->nama_lengkap ?: $user->username));
             redirect('pendaftaran');
         } else {
             $this->session->set_flashdata('error', 'Username atau password salah.');
@@ -75,10 +75,6 @@ class Auth extends CI_Controller {
         $nama_lengkap = $this->input->post('nama_lengkap', TRUE);
         $password     = $this->input->post('password');
         $konfirmasi   = $this->input->post('konfirmasi_password');
-
-        // Role hanya boleh siswa atau ortu — tidak bisa dimanipulasi
-        $role_post = $this->input->post('role');
-        $role = in_array($role_post, ['siswa', 'ortu']) ? $role_post : 'siswa';
 
         // Validasi field wajib
         if (empty($username) || empty($email) || empty($nama_lengkap) || empty($password)) {
@@ -127,7 +123,6 @@ class Auth extends CI_Controller {
             'username'      => $username,
             'email'         => $email,
             'password'      => password_hash($password, PASSWORD_BCRYPT),
-            'role'          => $role,
             'nama_lengkap'  => $nama_lengkap,
             'tempat_lahir'  => $this->input->post('tempat_lahir', TRUE),
             'tanggal_lahir' => $this->input->post('tanggal_lahir'),
@@ -145,7 +140,7 @@ class Auth extends CI_Controller {
 
     // Logout
     public function logout() {
-        $this->session->unset_userdata(['logged_in', 'user_id', 'username', 'role']);
+        $this->session->unset_userdata(['logged_in', 'user_id', 'username', 'nama_lengkap']);
         $this->session->set_flashdata('logout', 'Anda telah berhasil logout.');
         redirect('auth/login');
     }

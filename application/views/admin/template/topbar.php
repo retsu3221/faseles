@@ -17,8 +17,8 @@
                     <!-- User Dropdown -->
                     <div class="dropdown">
                         <?php
-                            $admin_nama     = $this->session->userdata('nama_lengkap') ?: ($this->session->userdata('username') ?: 'Admin');
-                            $admin_username = $this->session->userdata('username') ?: 'admin';
+                            $admin_nama     = $this->session->userdata('admin_nama') ?: 'Admin';
+                            $admin_username = $this->session->userdata('admin_username') ?: 'admin';
                         ?>
                         <a href="#"
                            class="d-flex align-items-center gap-2 text-decoration-none"

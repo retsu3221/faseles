@@ -14,257 +14,114 @@
                                 <i class="bi bi-person-circle"></i>
                             </div>
                             <h5 class="fw-bold mb-1">Buat Akun Baru</h5>
-                            <p class="text-muted small mb-0">Pilih jenis akun yang ingin didaftarkan</p>
+                            <p class="text-muted small mb-0">Lengkapi data di bawah untuk mendaftar</p>
                         </div>
 
-                        <!-- Tab Switcher -->
-                        <div class="register-tab-wrapper mb-4">
-                            <ul class="nav nav-pills register-tab" id="registerTab" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#tab-siswa" type="button" role="tab">
-                                        &#127891; Siswa
-                                    </button>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#tab-ortu" type="button" role="tab">
-                                        &#128106; Orang Tua
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
+                        <form action="<?= site_url('auth/proses_register'); ?>" method="POST">
 
-                        <div class="tab-content" id="registerTabContent">
+                            <div class="form-section-title mt-0">&#128100; Data Pribadi Siswa</div>
 
-                            <!-- ===== FORM SISWA ===== -->
-                            <div class="tab-pane fade show active" id="tab-siswa" role="tabpanel">
-                                <form action="<?= site_url('auth/proses_register'); ?>" method="POST">
-                                    <input type="hidden" name="role" value="siswa">
-
-                                    <div class="form-section-title mt-0">&#128100; Data Pribadi Siswa</div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small">Nama Lengkap</label>
-                                        <input type="text" name="nama_lengkap" class="form-control bg-light" required placeholder="Nama lengkap siswa">
-                                    </div>
-
-                                    <div class="row g-3 mb-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">Tempat Lahir</label>
-                                            <input type="text" name="tempat_lahir" class="form-control bg-light" required placeholder="Kota tempat lahir">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">Tanggal Lahir</label>
-                                            <input type="date" name="tanggal_lahir" class="form-control bg-light" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small d-block">Jenis Kelamin</label>
-                                        <div class="d-flex gap-3 mt-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="jenis_kelamin" value="Laki-laki" id="jkSiswaL" required>
-                                                <label class="form-check-label" for="jkSiswaL">Laki-laki</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="jenis_kelamin" value="Perempuan" id="jkSiswaP">
-                                                <label class="form-check-label" for="jkSiswaP">Perempuan</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small">Alamat</label>
-                                        <textarea name="alamat" class="form-control bg-light" rows="2" required placeholder="Nama jalan, RT/RW, Kelurahan, Kecamatan..."></textarea>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small d-block">Tingkat Sekolah</label>
-                                        <div class="d-flex gap-3 mt-1 flex-wrap">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="asal_sekolah" value="TK" id="tktTK">
-                                                <label class="form-check-label" for="tktTK">TK & SD</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="asal_sekolah" value="SMP" id="tktSMP" required>
-                                                <label class="form-check-label" for="tktSMP">SMP / MTs</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="asal_sekolah" value="SMA" id="tktSMA">
-                                                <label class="form-check-label" for="tktSMA">SMA / K</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-section-title">&#128106; Data Orang Tua / Wali</div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small">Nama Lengkap Orang Tua / Wali</label>
-                                        <input type="text" name="nama_ortu" class="form-control bg-light" required placeholder="Nama lengkap orang tua atau wali">
-                                    </div>
-
-                                    <div class="row g-3 mb-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">No. WhatsApp</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light">+62</span>
-                                                <input type="number" name="no_wa_ortu" class="form-control bg-light" required placeholder="8xxxxxxxxxx">
-                                            </div>
-                                            <div class="form-text">Tanpa angka 0 di depan</div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">Pekerjaan</label>
-                                            <input type="text" name="pekerjaan_ortu" class="form-control bg-light" required placeholder="Contoh: Wiraswasta">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-section-title">&#128274; Data Akun</div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small">Username</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-at"></i></span>
-                                            <input type="text" name="username" class="form-control bg-light border-start-0" required placeholder="Buat username unik">
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small">Email</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope-fill"></i></span>
-                                            <input type="email" name="email" class="form-control bg-light border-start-0" required placeholder="contoh@email.com">
-                                        </div>
-                                    </div>
-
-                                    <div class="row g-3 mb-4">
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">Password</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock-fill"></i></span>
-                                                <input type="password" name="password" id="pwSiswa" class="form-control bg-light border-start-0" required minlength="8" placeholder="Minimal 8 karakter">
-                                                <button class="btn btn-light" type="button" onclick="togglePassword('pwSiswa', this)"><i class="bi bi-eye"></i></button>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">Konfirmasi Password</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock-fill"></i></span>
-                                                <input type="password" name="konfirmasi_password" id="pwSiswaKonfirm" class="form-control bg-light border-start-0" required placeholder="Ulangi password">
-                                                <button class="btn btn-light" type="button" onclick="togglePassword('pwSiswaKonfirm', this)"><i class="bi bi-eye"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-grid">
-                                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">
-                                            Daftar sebagai Siswa &#8594;
-                                        </button>
-                                    </div>
-                                </form>
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-bold small">Nama Lengkap</label>
+                                <input type="text" name="nama_lengkap" class="form-control bg-light" required placeholder="Nama lengkap siswa">
                             </div>
 
-                            <!-- ===== FORM ORANG TUA ===== -->
-                            <div class="tab-pane fade" id="tab-ortu" role="tabpanel">
-                                <form action="<?= site_url('auth/proses_register'); ?>" method="POST">
-                                    <input type="hidden" name="role" value="ortu">
-
-                                    <div class="form-section-title mt-0">&#128106; Data Orang Tua / Wali</div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small">Nama Lengkap</label>
-                                        <input type="text" name="nama_lengkap" class="form-control bg-light" required placeholder="Nama lengkap orang tua / wali">
-                                    </div>
-
-                                    <div class="row g-3 mb-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">Tempat Lahir</label>
-                                            <input type="text" name="tempat_lahir" class="form-control bg-light" required placeholder="Kota tempat lahir">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">Tanggal Lahir</label>
-                                            <input type="date" name="tanggal_lahir" class="form-control bg-light" required>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small d-block">Jenis Kelamin</label>
-                                        <div class="d-flex gap-3 mt-1">
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="jenis_kelamin" value="Laki-laki" id="jkOrtuL" required>
-                                                <label class="form-check-label" for="jkOrtuL">Laki-laki</label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" type="radio" name="jenis_kelamin" value="Perempuan" id="jkOrtuP">
-                                                <label class="form-check-label" for="jkOrtuP">Perempuan</label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small">Alamat</label>
-                                        <textarea name="alamat" class="form-control bg-light" rows="2" required placeholder="Nama jalan, RT/RW, Kelurahan, Kecamatan..."></textarea>
-                                    </div>
-
-                                    <div class="row g-3 mb-3">
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">No. WhatsApp</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light">+62</span>
-                                                <input type="number" name="no_wa_ortu" class="form-control bg-light" required placeholder="8xxxxxxxxxx">
-                                            </div>
-                                            <div class="form-text">Tanpa angka 0 di depan</div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">Pekerjaan</label>
-                                            <input type="text" name="pekerjaan_ortu" class="form-control bg-light" required placeholder="Contoh: Wiraswasta">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-section-title">&#128274; Data Akun</div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small">Username</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-at"></i></span>
-                                            <input type="text" name="username" class="form-control bg-light border-start-0" required placeholder="Buat username unik">
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label text-muted fw-bold small">Email</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope-fill"></i></span>
-                                            <input type="email" name="email" class="form-control bg-light border-start-0" required placeholder="contoh@email.com">
-                                        </div>
-                                    </div>
-
-                                    <div class="row g-3 mb-4">
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">Password</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock-fill"></i></span>
-                                                <input type="password" name="password" id="pwOrtu" class="form-control bg-light border-start-0" required minlength="8" placeholder="Minimal 8 karakter">
-                                                <button class="btn btn-light" type="button" onclick="togglePassword('pwOrtu', this)"><i class="bi bi-eye"></i></button>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label class="form-label text-muted fw-bold small">Konfirmasi Password</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock-fill"></i></span>
-                                                <input type="password" name="konfirmasi_password" id="pwOrtuKonfirm" class="form-control bg-light border-start-0" required placeholder="Ulangi password">
-                                                <button class="btn btn-light" type="button" onclick="togglePassword('pwOrtuKonfirm', this)"><i class="bi bi-eye"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-grid">
-                                        <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">
-                                            Daftar sebagai Orang Tua &#8594;
-                                        </button>
-                                    </div>
-                                </form>
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fw-bold small">Tempat Lahir</label>
+                                    <input type="text" name="tempat_lahir" class="form-control bg-light" required placeholder="Kota tempat lahir">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fw-bold small">Tanggal Lahir</label>
+                                    <input type="date" name="tanggal_lahir" class="form-control bg-light" required>
+                                </div>
                             </div>
 
-                        </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-bold small d-block">Jenis Kelamin</label>
+                                <div class="d-flex gap-3 mt-1">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="jenis_kelamin" value="Laki-laki" id="jkL" required>
+                                        <label class="form-check-label" for="jkL">Laki-laki</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="jenis_kelamin" value="Perempuan" id="jkP">
+                                        <label class="form-check-label" for="jkP">Perempuan</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-bold small">Alamat</label>
+                                <textarea name="alamat" class="form-control bg-light" rows="2" required placeholder="Nama jalan, RT/RW, Kelurahan, Kecamatan..."></textarea>
+                            </div>
+
+                            <div class="form-section-title">&#128106; Data Orang Tua / Wali</div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-bold small">Nama Lengkap Orang Tua / Wali</label>
+                                <input type="text" name="nama_ortu" class="form-control bg-light" required placeholder="Nama lengkap orang tua atau wali">
+                            </div>
+
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fw-bold small">No. WhatsApp</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light">+62</span>
+                                        <input type="number" name="no_wa_ortu" class="form-control bg-light" required placeholder="8xxxxxxxxxx">
+                                    </div>
+                                    <div class="form-text">Tanpa angka 0 di depan</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fw-bold small">Pekerjaan</label>
+                                    <input type="text" name="pekerjaan_ortu" class="form-control bg-light" required placeholder="Contoh: Wiraswasta">
+                                </div>
+                            </div>
+
+                            <div class="form-section-title">&#128274; Data Akun</div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-bold small">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-at"></i></span>
+                                    <input type="text" name="username" class="form-control bg-light border-start-0" required placeholder="Buat username unik">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-bold small">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope-fill"></i></span>
+                                    <input type="email" name="email" class="form-control bg-light border-start-0" required placeholder="contoh@email.com">
+                                </div>
+                            </div>
+
+                            <div class="row g-3 mb-4">
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fw-bold small">Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock-fill"></i></span>
+                                        <input type="password" name="password" id="pw" class="form-control bg-light border-start-0" required minlength="8" placeholder="Minimal 8 karakter">
+                                        <button class="btn btn-light" type="button" onclick="togglePassword('pw', this)"><i class="bi bi-eye"></i></button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label text-muted fw-bold small">Konfirmasi Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock-fill"></i></span>
+                                        <input type="password" name="konfirmasi_password" id="pwKonfirm" class="form-control bg-light border-start-0" required placeholder="Ulangi password">
+                                        <button class="btn btn-light" type="button" onclick="togglePassword('pwKonfirm', this)"><i class="bi bi-eye"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg fw-bold shadow-sm">
+                                    Daftar Sekarang &#8594;
+                                </button>
+                            </div>
+
+                        </form>
 
                         <div class="text-center mt-4">
                             <p class="text-muted small mb-0">

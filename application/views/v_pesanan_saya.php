@@ -37,7 +37,7 @@
                 <!-- List Pesanan -->
                 <div class="d-flex flex-column gap-3">
                     <?php foreach ($pesanan as $item):
-                        $status = $item['status_pembayaran'];
+                        $status = $item['status_verifikasi'];
                         $cfg    = $status_config[$status] ?? $status_config['pending'];
                     ?>
                     <div class="card border-0 shadow-sm rounded-4 pesanan-card">

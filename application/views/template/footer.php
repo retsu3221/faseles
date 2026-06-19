@@ -20,7 +20,7 @@
         <div class="toast-notif toast-notif-success" role="alert" id="toastSuccess">
             <div class="toast-notif-icon"><i class="bi bi-check-lg"></i></div>
             <div class="toast-notif-body">
-                <div class="toast-notif-title">Login Berhasil!</div>
+                <div class="toast-notif-title">Berhasil!</div>
                 <div class="toast-notif-msg"><?= htmlspecialchars($flash_success); ?></div>
             </div>
             <button class="toast-notif-close" data-bs-dismiss="toast"><i class="bi bi-x-lg"></i></button>

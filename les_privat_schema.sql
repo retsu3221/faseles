@@ -31,18 +31,11 @@ CREATE TABLE `admin` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
---
--- Dumping data for table `admin`
---
-
-LOCK TABLES `admin` WRITE;
-/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
-INSERT INTO `admin` VALUES (1,'admin','$2y$10$BKPtdva6UdbVfuW1v1z8oeDgJ9WCkaGdPlUK024fDlu5VhGBKT1Im','Admin Fase Les',1,'2026-06-12 05:12:41'),(2,'retsu','$2y$10$wgaxA7.din6KuOSD3/VZwulugJ52Vvo4BLzJKXMgZiGMkX5g40foq','Retsu Eka Titis',2,'2026-06-19 16:20:49');
-/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
-UNLOCK TABLES;
+INSERT INTO `admin` (`username`, `password`, `nama_lengkap`, `role`) VALUES
+('admin', '$2y$10$o11fEEO3glVc3e0zh9CR7OSKXdqDnGJ7e7GNoYKRkwAFZ58Bi3c/S', 'Admin Fase Les', 1);
 
 --
 -- Table structure for table `bukti_pembayaran`
@@ -66,18 +59,8 @@ CREATE TABLE `bukti_pembayaran` (
   PRIMARY KEY (`id`),
   KEY `fk_bukti_pendaftaran` (`pendaftaran_id`),
   CONSTRAINT `fk_bukti_pendaftaran` FOREIGN KEY (`pendaftaran_id`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `bukti_pembayaran`
---
-
-LOCK TABLES `bukti_pembayaran` WRITE;
-/*!40000 ALTER TABLE `bukti_pembayaran` DISABLE KEYS */;
-INSERT INTO `bukti_pembayaran` VALUES (8,9,'9_1781861525.jpeg','Retsu Eka Titis',480000,'2026-06-19','','diterima','','2026-06-19 16:32:05','2026-06-19 09:33:45');
-/*!40000 ALTER TABLE `bukti_pembayaran` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `jadwal`
@@ -103,18 +86,8 @@ CREATE TABLE `jadwal` (
   KEY `pengajar_id` (`pengajar_id`),
   CONSTRAINT `jadwal_ibfk_1` FOREIGN KEY (`pendaftaran_id`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE,
   CONSTRAINT `jadwal_ibfk_2` FOREIGN KEY (`pengajar_id`) REFERENCES `pengajar` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `jadwal`
---
-
-LOCK TABLES `jadwal` WRITE;
-/*!40000 ALTER TABLE `jadwal` DISABLE KEYS */;
-INSERT INTO `jadwal` VALUES (1,9,1,'Senin','17:29:00','17:25:00',8,8,'selesai',NULL,'2026-06-19 15:26:00'),(2,9,3,'Selasa','23:23:00','00:23:00',8,1,'aktif',NULL,'2026-06-19 16:23:15');
-/*!40000 ALTER TABLE `jadwal` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `paket`
@@ -132,18 +105,8 @@ CREATE TABLE `paket` (
   `harga` int NOT NULL,
   `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `paket`
---
-
-LOCK TABLES `paket` WRITE;
-/*!40000 ALTER TABLE `paket` DISABLE KEYS */;
-INSERT INTO `paket` VALUES (1,'TK','Privat',45,8,330000,1),(2,'TK','Privat',60,8,430000,1),(3,'TK','Kelompok',45,8,290000,1),(4,'TK','Kelompok',60,8,380000,1),(5,'SMP','Privat',45,8,365000,1),(6,'SMP','Privat',60,8,480000,1),(7,'SMP','Kelompok',45,8,330000,1),(8,'SMP','Kelompok',60,8,430000,1),(9,'SMA','Privat',45,8,440000,1),(10,'SMA','Privat',60,8,580000,1),(11,'SMA','Kelompok',45,8,405000,1),(12,'SMA','Kelompok',60,8,530000,1);
-/*!40000 ALTER TABLE `paket` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `pendaftaran`
@@ -166,18 +129,8 @@ CREATE TABLE `pendaftaran` (
   KEY `fk_paket` (`paket_id`),
   CONSTRAINT `fk_paket` FOREIGN KEY (`paket_id`) REFERENCES `paket` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `pendaftaran`
---
-
-LOCK TABLES `pendaftaran` WRITE;
-/*!40000 ALTER TABLE `pendaftaran` DISABLE KEYS */;
-INSERT INTO `pendaftaran` VALUES (8,'FASE-20260616-00001',2,6,'Kamis','02:04:00','2026-06-16 22:05:27'),(9,'FASE-20260619-00001',2,6,'Jumat','17:29:00','2026-06-19 16:29:55'),(10,'FASE-20260619-00002',2,2,'Rabu','22:46:00','2026-06-19 22:53:09');
-/*!40000 ALTER TABLE `pendaftaran` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `pengajar`
@@ -193,18 +146,8 @@ CREATE TABLE `pengajar` (
   `mata_pelajaran` varchar(200) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `pengajar`
---
-
-LOCK TABLES `pengajar` WRITE;
-/*!40000 ALTER TABLE `pengajar` DISABLE KEYS */;
-INSERT INTO `pengajar` VALUES (1,'Rahmat Nur Sandi','8721121922','Matematika','2026-06-19 15:23:37'),(2,'Retsu Eka Titis','1232141','Bahasa Jepang','2026-06-19 15:25:02'),(3,'Sample','9123213123','Sample','2026-06-19 16:22:55');
-/*!40000 ALTER TABLE `pengajar` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -230,18 +173,8 @@ CREATE TABLE `users` (
   `pekerjaan_ortu` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (2,'retsu','retsuekatitiss@gmail.com','$2y$10$QY48uuGYNfu43OzwB2yXaOdKURMA0IDOwq/ZctucqBdEEqOXpxR4m','2026-06-05 21:46:20','Retsu Eka Titis','Bogor','2003-07-07','Laki-laki','Griya Indah Cikampek','TK','Maryono','85814005212','Karyawan Swasta'),(4,'sultan','sultan@gmail.com','$2y$10$srhugz/w2nV/MRTqdP4LR.r8AyG2QUaj/qxUoImFU4zEx9A7akIsq','2026-06-16 22:20:48','Sultan Arraafi','Purwakarta','2026-06-16','Laki-laki','Griya Indah Cikampek 3',NULL,'Supriyanto','821457820','Bapak'),(5,'uwaw','uwaw@gmail.com','$2y$10$ai8P/nRDlb34m/lF86QgIeHxGY1e8cr/4N4xR7l8lNG1rWg5W/qBm','2026-06-19 22:40:45',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),(6,'asdsadas','adasdsa@gmail.com','$2y$10$oxPorA1Tt4bVMjcjpSBiK.fWNf6URZd9mRJPJIp0KgpSSPW5k6Toq','2026-06-19 22:42:01',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -252,4 +185,5 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-19 23:33:23
+-- Dump completed on 2026-06-19 23:33:31
+

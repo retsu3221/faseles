@@ -39,7 +39,7 @@ class Akun_model extends CI_Model {
         return $this->db
             ->select("pendaftaran.*, paket.tipe_kelas, paket.durasi_menit, paket.jumlah_pertemuan, paket.harga,
                       u.nama_lengkap, u.asal_sekolah, u.nama_ortu, u.no_wa_ortu,
-                      $sub AS status_pembayaran", FALSE)
+                      $sub AS status_verifikasi", FALSE)
             ->from('pendaftaran')
             ->join('paket', 'paket.id = pendaftaran.paket_id', 'left')
             ->join('users u', 'u.id = pendaftaran.user_id', 'left')
@@ -55,7 +55,7 @@ class Akun_model extends CI_Model {
         return $this->db
             ->select("pendaftaran.*, paket.tipe_kelas, paket.durasi_menit, paket.jumlah_pertemuan, paket.harga,
                       u.nama_lengkap, u.asal_sekolah, u.nama_ortu, u.no_wa_ortu,
-                      $sub AS status_pembayaran", FALSE)
+                      $sub AS status_verifikasi", FALSE)
             ->from('pendaftaran')
             ->join('paket', 'paket.id = pendaftaran.paket_id', 'left')
             ->join('users u', 'u.id = pendaftaran.user_id', 'left')

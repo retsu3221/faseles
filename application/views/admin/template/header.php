@@ -43,11 +43,34 @@
         <div class="sidebar-heading">Manajemen</div>
 
         <ul class="nav flex-column">
+            <?php if ((int)$this->session->userdata('admin_role') === 1): ?>
+            <li class="nav-item">
+                <a class="nav-link <?= ($active_menu ?? '') === 'admin' ? 'active' : '' ?>"
+                   href="<?= site_url('admin/admin_list'); ?>">
+                    <i class="bi bi-shield-fill-check"></i>
+                    <span>Admin</span>
+                </a>
+            </li>
+            <?php endif; ?>
             <li class="nav-item">
                 <a class="nav-link <?= ($active_menu ?? '') === 'peserta' ? 'active' : '' ?>"
                    href="<?= site_url('admin/peserta'); ?>">
                     <i class="bi bi-people-fill"></i>
-                    <span>Peserta</span>
+                    <span>Users</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?= ($active_menu ?? '') === 'pengajar' ? 'active' : '' ?>"
+                   href="<?= site_url('admin/pengajar'); ?>">
+                    <i class="bi bi-person-badge-fill"></i>
+                    <span>Pengajar</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link <?= ($active_menu ?? '') === 'jadwal' ? 'active' : '' ?>"
+                   href="<?= site_url('admin/jadwal'); ?>">
+                    <i class="bi bi-calendar2-week-fill"></i>
+                    <span>Jadwal</span>
                 </a>
             </li>
             <li class="nav-item">
@@ -66,6 +89,7 @@
             </li>
         </ul>
 
+        <?php if ((int)$this->session->userdata('admin_role') === 1): ?>
         <hr class="sidebar-divider">
         <div class="sidebar-heading">Laporan</div>
 
@@ -85,6 +109,7 @@
                 </a>
             </li>
         </ul>
+        <?php endif; ?>
 
         <hr class="sidebar-divider d-none d-md-block">
 
