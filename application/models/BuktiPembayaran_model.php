@@ -28,4 +28,12 @@ class BuktiPembayaran_model extends CI_Model {
             ->get('bukti_pembayaran')
             ->row_array();
     }
+
+    public function verifikasi($bp_id, $status, $catatan_admin) {
+        return $this->db->update('bukti_pembayaran', [
+            'status_verifikasi' => $status,
+            'catatan_admin'     => $catatan_admin,
+            'verified_at'       => ($status !== 'pending') ? date('Y-m-d H:i:s') : null,
+        ], ['id' => $bp_id]);
+    }
 }

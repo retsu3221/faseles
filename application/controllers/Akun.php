@@ -47,7 +47,7 @@ class Akun extends CI_Controller {
     public function update_profil() {
         $user_id = $this->session->userdata('user_id');
 
-        $this->db->update('users', [
+        $this->Akun_model->update_profil($user_id, [
             'nama_lengkap'   => $this->input->post('nama_lengkap', TRUE),
             'tempat_lahir'   => $this->input->post('tempat_lahir', TRUE),
             'tanggal_lahir'  => $this->input->post('tanggal_lahir') ?: NULL,
@@ -57,7 +57,7 @@ class Akun extends CI_Controller {
             'nama_ortu'      => $this->input->post('nama_ortu', TRUE) ?: NULL,
             'no_wa_ortu'     => $this->input->post('no_wa_ortu') ?: NULL,
             'pekerjaan_ortu' => $this->input->post('pekerjaan_ortu', TRUE) ?: NULL,
-        ], ['id' => $user_id]);
+        ]);
 
         $nama = $this->input->post('nama_lengkap', TRUE);
         if ($nama) {
@@ -126,18 +126,7 @@ class Akun extends CI_Controller {
 
     // Halaman jadwal user
     public function jadwal() {
-        $user_id = $this->session->userdata('user_id');
-        $data['jadwal'] = $this->db
-            ->select('j.*, CONCAT(pak.tingkat, " – ", pak.tipe_kelas) as nama_paket,
-                      pg.nama_lengkap as nama_pengajar,
-                      pg.mata_pelajaran, pg.no_wa as wa_pengajar')
-            ->from('jadwal j')
-            ->join('pendaftaran p',  'p.id  = j.pendaftaran_id')
-            ->join('paket pak',      'pak.id = p.paket_id')
-            ->join('pengajar pg',    'pg.id = j.pengajar_id')
-            ->where('p.user_id', $user_id)
-            ->order_by('j.created_at', 'DESC')
-            ->get()->result_array();
+        $data['jadwal'] = $this->Akun_model->get_jadwal_user($this->session->userdata('user_id'));
         $this->load->view('v_jadwal', $data);
     }
 

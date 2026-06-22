@@ -5,9 +5,7 @@ class Pendaftaran extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        $this->load->model('Pendaftaran_model');
-        $this->load->model('Paket_model');
-        $this->load->model('BuktiPembayaran_model');
+        $this->load->model(['Pendaftaran_model', 'Paket_model', 'BuktiPembayaran_model', 'Akun_model']);
     }
 
     // Fungsi untuk menampilkan Halaman Awal
@@ -37,7 +35,7 @@ class Pendaftaran extends CI_Controller {
             redirect('auth/login');
         }
         $data['paket']     = $this->Paket_model->get_aktif();
-        $data['user_data'] = $this->db->get_where('users', ['id' => $this->session->userdata('user_id')])->row();
+        $data['user_data'] = $this->Akun_model->get_user($this->session->userdata('user_id'));
         $this->load->view('v_daftar_new', $data);
     }
 
@@ -50,7 +48,7 @@ class Pendaftaran extends CI_Controller {
         $user_id = $this->session->userdata('user_id');
 
         // Simpan data pribadi ke tabel users
-        $this->db->update('users', [
+        $this->Pendaftaran_model->update_user_data($user_id, [
             'nama_lengkap'   => $this->input->post('nama_lengkap', TRUE),
             'tempat_lahir'   => $this->input->post('tempat_lahir', TRUE),
             'tanggal_lahir'  => $this->input->post('tanggal_lahir'),
@@ -60,16 +58,11 @@ class Pendaftaran extends CI_Controller {
             'nama_ortu'      => $this->input->post('nama_ortu', TRUE),
             'no_wa_ortu'     => $this->input->post('no_wa_ortu'),
             'pekerjaan_ortu' => $this->input->post('pekerjaan_ortu', TRUE),
-        ], ['id' => $user_id]);
-
-        // Generate no transaksi
-        $tanggal      = date('Ymd');
-        $count        = $this->Pendaftaran_model->count_hari_ini() + 1;
-        $no_transaksi = 'FASE-' . $tanggal . '-' . str_pad($count, 5, '0', STR_PAD_LEFT);
+        ]);
 
         // Simpan data pendaftaran (hanya field spesifik registrasi)
         $id_pendaftar = $this->Pendaftaran_model->simpan_data([
-            'no_transaksi' => $no_transaksi,
+            'no_transaksi' => $this->Pendaftaran_model->generate_no_transaksi(),
             'user_id'      => $user_id,
             'paket_id'     => $this->input->post('paket_id'),
             'jadwal_hari'  => $this->input->post('jadwal'),
@@ -130,6 +123,13 @@ class Pendaftaran extends CI_Controller {
         $jumlah_transfer = (int) $this->input->post('jumlah_transfer');
         $tanggal_transfer = $this->input->post('tanggal_transfer');
         $catatan = $this->input->post('catatan', TRUE);
+
+        // Validasi tanggal transfer tidak boleh melewati hari ini
+        if (!empty($tanggal_transfer) && $tanggal_transfer > date('Y-m-d')) {
+            $this->session->set_flashdata('error', 'Tanggal transfer tidak boleh melewati tanggal hari ini.');
+            redirect('pendaftaran/pembayaran/' . $pendaftaran_id);
+            return;
+        }
 
         // Validasi file
         if (empty($_FILES['file_bukti']['name'])) {

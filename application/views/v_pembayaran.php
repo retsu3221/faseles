@@ -517,7 +517,8 @@ $isKadaluarsa = $status === 'kadaluarsa';
                             </div>
                             <div class="col-6">
                                 <label class="form-label text-muted fw-bold small">Tanggal Transfer</label>
-                                <input type="date" name="tanggal_transfer" class="form-control bg-light" required>
+                                <input type="date" name="tanggal_transfer" class="form-control bg-light"
+                                       max="<?= date('Y-m-d') ?>" required>
                             </div>
                         </div>
 

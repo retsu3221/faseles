@@ -23,4 +23,23 @@ class Paket_model extends CI_Model {
     public function get_by_id($id) {
         return $this->db->get_where('paket', ['id' => $id])->row_array();
     }
+
+    public function get_all() {
+        return $this->db
+            ->order_by('tingkat')
+            ->order_by('tipe_kelas')
+            ->get('paket')->result_array();
+    }
+
+    public function tambah($data) {
+        return $this->db->insert('paket', $data);
+    }
+
+    public function update($id, $data) {
+        return $this->db->update('paket', $data, ['id' => $id]);
+    }
+
+    public function hapus($id) {
+        return $this->db->delete('paket', ['id' => $id]);
+    }
 }
