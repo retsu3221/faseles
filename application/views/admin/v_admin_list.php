@@ -34,7 +34,6 @@ $this->load->view('admin/template/topbar', [
                         <th class="ps-3" style="width:40px;">#</th>
                         <th>Nama Lengkap</th>
                         <th>Username</th>
-                        <th class="text-center">Role</th>
                         <th class="d-none d-md-table-cell">Dibuat</th>
                         <th class="text-center pe-3">Aksi</th>
                     </tr>
@@ -42,10 +41,8 @@ $this->load->view('admin/template/topbar', [
                 <tbody>
                 <?php if (!empty($admins)): ?>
                     <?php foreach ($admins as $i => $a): ?>
-                    <?php $isSuper = (int)$a['role'] === 1; ?>
                     <tr class="admin-row" data-search="<?= strtolower(htmlspecialchars(
-                        ($a['nama_lengkap'] ?? '') . ' ' . $a['username'] . ' ' .
-                        ($isSuper ? 'super admin' : 'admin')
+                        ($a['nama_lengkap'] ?? '') . ' ' . $a['username']
                     )) ?>">
                         <td class="ps-3 text-muted small"><?= $i + 1 ?></td>
                         <td>
@@ -58,13 +55,6 @@ $this->load->view('admin/template/topbar', [
                             </div>
                         </td>
                         <td class="text-muted small">@<?= htmlspecialchars($a['username']) ?></td>
-                        <td class="text-center">
-                            <?php if ($isSuper): ?>
-                                <span class="badge bg-warning text-dark fw-semibold">Super Admin</span>
-                            <?php else: ?>
-                                <span class="badge bg-secondary-subtle text-secondary fw-semibold">Admin</span>
-                            <?php endif; ?>
-                        </td>
                         <td class="text-muted small d-none d-md-table-cell">
                             <?= date('d M Y', strtotime($a['created_at'])) ?>
                         </td>
@@ -74,7 +64,7 @@ $this->load->view('admin/template/topbar', [
                                     data-id="<?= $a['id'] ?>"
                                     data-nama="<?= htmlspecialchars($a['nama_lengkap'] ?: '') ?>"
                                     data-username="<?= htmlspecialchars($a['username']) ?>"
-                                    data-role="<?= $a['role'] ?>">
+                >
                                 <i class="bi bi-pencil"></i>
                             </button>
                             <?php if ((int)$a['id'] !== (int)$this->session->userdata('admin_id')): ?>
@@ -90,7 +80,7 @@ $this->load->view('admin/template/topbar', [
                     <?php endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="6" class="text-center text-muted py-5">
+                        <td colspan="5" class="text-center text-muted py-5">
                             <i class="bi bi-shield fs-2 d-block mb-2 opacity-50"></i>
                             Belum ada data admin.
                         </td>
@@ -115,7 +105,6 @@ $this->load->view('admin/template/topbar', [
             <form action="<?= site_url('admin/tambah_admin') ?>" method="post">
                 <div class="modal-body">
 
-                    <input type="hidden" name="role" value="2">
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Nama Lengkap <span class="text-danger">*</span></label>
                         <input type="text" name="nama_lengkap" class="form-control"
@@ -170,18 +159,9 @@ $this->load->view('admin/template/topbar', [
             <form id="formEditAdmin" action="" method="post">
                 <div class="modal-body">
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-8">
-                            <label class="form-label fw-semibold small">Nama Lengkap <span class="text-danger">*</span></label>
-                            <input type="text" name="nama_lengkap" id="edit_nama" class="form-control" required>
-                        </div>
-                        <div class="col-4">
-                            <label class="form-label fw-semibold small">Role <span class="text-danger">*</span></label>
-                            <select name="role" id="edit_role" class="form-select" required>
-                                <option value="2">Admin</option>
-                                <option value="1">Super Admin</option>
-                            </select>
-                        </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold small">Nama Lengkap <span class="text-danger">*</span></label>
+                        <input type="text" name="nama_lengkap" id="edit_nama" class="form-control" required>
                     </div>
 
                     <div class="mb-3">
@@ -260,7 +240,6 @@ document.querySelectorAll('.btn-edit').forEach(function (btn) {
         form.action = '<?= site_url('admin/update_admin/') ?>' + d.id;
         document.getElementById('edit_nama').value     = d.nama;
         document.getElementById('edit_username').value = d.username;
-        document.getElementById('edit_role').value     = d.role;
         form.querySelector('[name=password]').value            = '';
         form.querySelector('[name=konfirmasi_password]').value = '';
         new bootstrap.Modal(document.getElementById('modalEditAdmin')).show();

@@ -20,7 +20,7 @@ $this->load->view('admin/template/topbar', [
             <div class="input-group input-group-sm" style="max-width:220px;">
                 <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-search"></i></span>
                 <input type="text" id="searchPengajar" class="form-control bg-light border-start-0"
-                       placeholder="Cari nama, mata pelajaran...">
+                       placeholder="Cari nama, tingkat...">
             </div>
             <span class="badge bg-primary rounded-pill ms-auto" id="jumlahPengajar"><?= count($pengajar) ?> pengajar</span>
         </div>
@@ -32,7 +32,7 @@ $this->load->view('admin/template/topbar', [
                     <tr>
                         <th class="ps-3" style="width:40px;">#</th>
                         <th>Nama Lengkap</th>
-                        <th class="d-none d-md-table-cell">Mata Pelajaran</th>
+                        <th class="d-none d-md-table-cell">Tingkat Diajar</th>
                         <th class="d-none d-md-table-cell">No. WhatsApp</th>
                         <th class="text-center pe-3">Aksi</th>
                     </tr>
@@ -41,7 +41,7 @@ $this->load->view('admin/template/topbar', [
                 <?php if (!empty($pengajar)): ?>
                     <?php foreach ($pengajar as $i => $p): ?>
                     <tr class="pengajar-row" data-search="<?= strtolower(htmlspecialchars(
-                        $p['nama_lengkap'] . ' ' . ($p['mata_pelajaran'] ?? '') . ' ' . ($p['no_wa'] ?? '')
+                        $p['nama_lengkap'] . ' ' . ($p['username'] ?? '') . ' ' . ($p['tingkat_diajar'] ?? '') . ' ' . ($p['no_wa'] ?? '')
                     )) ?>">
                         <td class="ps-3 text-muted small"><?= $i + 1 ?></td>
                         <td>
@@ -50,11 +50,24 @@ $this->load->view('admin/template/topbar', [
                                      style="width:2rem;height:2rem;flex-shrink:0;">
                                     <i class="bi bi-person-fill text-success" style="font-size:.8rem;"></i>
                                 </div>
-                                <div class="fw-semibold"><?= htmlspecialchars($p['nama_lengkap']) ?></div>
+                                <div>
+                                    <div class="fw-semibold"><?= htmlspecialchars($p['nama_lengkap']) ?></div>
+                                    <?php if (!empty($p['username'])): ?>
+                                    <div class="text-muted" style="font-size:.72rem;">@<?= htmlspecialchars($p['username']) ?></div>
+                                    <?php else: ?>
+                                    <div class="text-warning" style="font-size:.72rem;"><i class="bi bi-exclamation-circle me-1"></i>belum ada akun login</div>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </td>
-                        <td class="text-muted small d-none d-md-table-cell">
-                            <?= htmlspecialchars($p['mata_pelajaran'] ?: '—') ?>
+                        <td class="d-none d-md-table-cell">
+                            <?php if (!empty($p['tingkat_diajar'])): ?>
+                                <?php foreach (explode(',', $p['tingkat_diajar']) as $t): ?>
+                                    <span class="badge bg-primary bg-opacity-75 me-1"><?= htmlspecialchars(trim($t)) ?></span>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <span class="text-muted small">—</span>
+                            <?php endif; ?>
                         </td>
                         <td class="text-muted small d-none d-md-table-cell">
                             <?= $p['no_wa'] ? '+62' . htmlspecialchars($p['no_wa']) : '—' ?>
@@ -66,7 +79,8 @@ $this->load->view('admin/template/topbar', [
                                         data-id="<?= $p['id'] ?>"
                                         data-nama="<?= htmlspecialchars($p['nama_lengkap']) ?>"
                                         data-wa="<?= htmlspecialchars($p['no_wa'] ?: '') ?>"
-                                        data-mapel="<?= htmlspecialchars($p['mata_pelajaran'] ?: '') ?>">
+                                        data-tingkat="<?= htmlspecialchars($p['tingkat_diajar'] ?: '') ?>"
+                                        data-username="<?= htmlspecialchars($p['username'] ?: '') ?>">
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 <button type="button"
@@ -110,14 +124,37 @@ $this->load->view('admin/template/topbar', [
                         <input type="text" name="nama_lengkap" class="form-control" placeholder="Nama pengajar" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold small">Mata Pelajaran</label>
-                        <input type="text" name="mata_pelajaran" class="form-control" placeholder="Contoh: Matematika, Fisika">
+                        <label class="form-label fw-semibold small d-block">Tingkat yang Diajar</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <?php foreach (['TK','SD','SMP','SMA'] as $lvl): ?>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                       name="tingkat_diajar[]" value="<?= $lvl ?>"
+                                       id="tambah_<?= $lvl ?>">
+                                <label class="form-check-label small" for="tambah_<?= $lvl ?>"><?= $lvl ?></label>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                    <div class="mb-1">
+                    <div class="mb-3">
                         <label class="form-label fw-semibold small">No. WhatsApp</label>
                         <div class="input-group">
                             <span class="input-group-text text-muted">+62</span>
                             <input type="text" name="no_wa" class="form-control" placeholder="8xxxxxxxxxx">
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <div class="small fw-bold text-secondary mb-2">
+                        <i class="bi bi-key me-1"></i>Akun Login Portal Pengajar <span class="fw-normal text-muted">(opsional)</span>
+                    </div>
+                    <div class="row g-3 mb-1">
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Username</label>
+                            <input type="text" name="username" class="form-control" placeholder="username pengajar" autocomplete="off">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Password</label>
+                            <input type="password" name="password" class="form-control" placeholder="Min. 6 karakter" autocomplete="new-password">
                         </div>
                     </div>
                 </div>
@@ -149,14 +186,37 @@ $this->load->view('admin/template/topbar', [
                         <input type="text" name="nama_lengkap" id="editNama" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label fw-semibold small">Mata Pelajaran</label>
-                        <input type="text" name="mata_pelajaran" id="editMapel" class="form-control" placeholder="Contoh: Matematika, Fisika">
+                        <label class="form-label fw-semibold small d-block">Tingkat yang Diajar</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <?php foreach (['TK','SD','SMP','SMA'] as $lvl): ?>
+                            <div class="form-check">
+                                <input class="form-check-input edit-tingkat" type="checkbox"
+                                       name="tingkat_diajar[]" value="<?= $lvl ?>"
+                                       id="edit_<?= $lvl ?>">
+                                <label class="form-check-label small" for="edit_<?= $lvl ?>"><?= $lvl ?></label>
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                    <div class="mb-1">
+                    <div class="mb-3">
                         <label class="form-label fw-semibold small">No. WhatsApp</label>
                         <div class="input-group">
                             <span class="input-group-text text-muted">+62</span>
                             <input type="text" name="no_wa" id="editWa" class="form-control" placeholder="8xxxxxxxxxx">
+                        </div>
+                    </div>
+                    <hr class="my-3">
+                    <div class="small fw-bold text-secondary mb-2">
+                        <i class="bi bi-key me-1"></i>Akun Login Portal Pengajar <span class="fw-normal text-muted">(opsional)</span>
+                    </div>
+                    <div class="row g-3 mb-1">
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Username</label>
+                            <input type="text" name="username" id="editUsername" class="form-control" placeholder="username pengajar" autocomplete="off">
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label fw-semibold small">Password Baru</label>
+                            <input type="password" name="password" class="form-control" placeholder="Kosongkan jika tetap" autocomplete="new-password">
                         </div>
                     </div>
                 </div>
@@ -212,9 +272,15 @@ document.querySelectorAll('.btn-edit').forEach(function (btn) {
     btn.addEventListener('click', function () {
         var d = this.dataset;
         document.getElementById('formEdit').action = '<?= site_url('admin/update_pengajar/') ?>' + d.id;
-        document.getElementById('editNama').value  = d.nama;
-        document.getElementById('editMapel').value = d.mapel;
-        document.getElementById('editWa').value    = d.wa;
+        document.getElementById('editNama').value     = d.nama;
+        document.getElementById('editWa').value       = d.wa;
+        document.getElementById('editUsername').value = d.username;
+
+        var checked = d.tingkat ? d.tingkat.split(',') : [];
+        document.querySelectorAll('.edit-tingkat').forEach(function (cb) {
+            cb.checked = checked.indexOf(cb.value) !== -1;
+        });
+
         new bootstrap.Modal(document.getElementById('modalEdit')).show();
     });
 });

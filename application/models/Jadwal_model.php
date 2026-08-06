@@ -12,7 +12,7 @@ class Jadwal_model extends CI_Model {
         return $this->db
             ->select('j.*, u.nama_lengkap as nama_siswa, u.username,
                       CONCAT(pak.tingkat, " – ", pak.tipe_kelas) as nama_paket,
-                      pg.nama_lengkap as nama_pengajar, pg.mata_pelajaran')
+                      pg.nama_lengkap as nama_pengajar, pg.tingkat_diajar')
             ->from('jadwal j')
             ->join('pendaftaran p', 'p.id  = j.pendaftaran_id')
             ->join('users u',       'u.id  = p.user_id')

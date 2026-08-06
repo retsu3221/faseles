@@ -43,7 +43,6 @@
         <div class="sidebar-heading">Manajemen</div>
 
         <ul class="nav flex-column">
-            <?php if ((int)$this->session->userdata('admin_role') === 1): ?>
             <li class="nav-item">
                 <a class="nav-link <?= ($active_menu ?? '') === 'admin' ? 'active' : '' ?>"
                    href="<?= site_url('admin/admin_list'); ?>">
@@ -51,7 +50,6 @@
                     <span>Admin</span>
                 </a>
             </li>
-            <?php endif; ?>
             <li class="nav-item">
                 <a class="nav-link <?= ($active_menu ?? '') === 'peserta' ? 'active' : '' ?>"
                    href="<?= site_url('admin/peserta'); ?>">
@@ -89,7 +87,6 @@
             </li>
         </ul>
 
-        <?php if ((int)$this->session->userdata('admin_role') === 1): ?>
         <hr class="sidebar-divider">
         <div class="sidebar-heading">Laporan</div>
 
@@ -109,7 +106,6 @@
                 </a>
             </li>
         </ul>
-        <?php endif; ?>
 
         <hr class="sidebar-divider d-none d-md-block">
 

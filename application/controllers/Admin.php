@@ -46,7 +46,6 @@ class Admin extends CI_Controller {
                 'admin_id'        => $admin['id'],
                 'admin_username'  => $admin['username'],
                 'admin_nama'      => $admin['nama_lengkap'],
-                'admin_role'      => (int)$admin['role'],
             ]);
             redirect('admin');
         }
@@ -56,15 +55,8 @@ class Admin extends CI_Controller {
     }
 
     public function logout() {
-        $this->session->unset_userdata(['admin_logged_in', 'admin_id', 'admin_username', 'admin_nama', 'admin_role']);
+        $this->session->unset_userdata(['admin_logged_in', 'admin_id', 'admin_username', 'admin_nama']);
         redirect('admin/login');
-    }
-
-    private function cek_role_super() {
-        if ((int)$this->session->userdata('admin_role') !== 1) {
-            $this->session->set_flashdata('error', 'Anda tidak memiliki akses ke halaman ini.');
-            redirect('admin');
-        }
     }
 
     // Setup akun admin pertama — hapus method ini setelah dipakai sekali
@@ -231,7 +223,6 @@ class Admin extends CI_Controller {
     // ================================================================
 
     public function admin_list() {
-        $this->cek_role_super();
         $data = [
             'page_title'  => 'Data Admin',
             'active_menu' => 'admin',
@@ -241,7 +232,6 @@ class Admin extends CI_Controller {
     }
 
     public function tambah_admin() {
-        $this->cek_role_super();
         $username   = $this->input->post('username', TRUE);
         $nama       = $this->input->post('nama_lengkap', TRUE);
         $password   = $this->input->post('password');
@@ -263,12 +253,10 @@ class Admin extends CI_Controller {
             return;
         }
 
-        $role = (int)$this->input->post('role') === 1 ? 1 : 2;
         $this->Admin_model->tambah([
             'username'     => $username,
             'nama_lengkap' => $nama,
             'password'     => password_hash($password, PASSWORD_BCRYPT),
-            'role'         => $role,
         ]);
 
         $this->session->set_flashdata('success', 'Admin baru berhasil ditambahkan.');
@@ -276,12 +264,10 @@ class Admin extends CI_Controller {
     }
 
     public function update_admin($id = null) {
-        $this->cek_role_super();
         if (!$id) redirect('admin/admin_list');
 
         $username   = $this->input->post('username', TRUE);
         $nama       = $this->input->post('nama_lengkap', TRUE);
-        $role       = (int)$this->input->post('role') === 1 ? 1 : 2;
         $password   = $this->input->post('password');
         $konfirmasi = $this->input->post('konfirmasi_password');
 
@@ -291,7 +277,7 @@ class Admin extends CI_Controller {
             return;
         }
 
-        $data = ['nama_lengkap' => $nama, 'username' => $username, 'role' => $role];
+        $data = ['nama_lengkap' => $nama, 'username' => $username];
 
         if (!empty($password)) {
             if (strlen($password) < 6) {
@@ -313,7 +299,6 @@ class Admin extends CI_Controller {
             $this->session->set_userdata([
                 'admin_username' => $username,
                 'admin_nama'     => $nama,
-                'admin_role'     => $role,
             ]);
         }
 
@@ -322,7 +307,6 @@ class Admin extends CI_Controller {
     }
 
     public function hapus_admin($id = null) {
-        $this->cek_role_super();
         if (!$id) redirect('admin/admin_list');
 
         if ((int)$id === (int)$this->session->userdata('admin_id')) {
@@ -341,8 +325,6 @@ class Admin extends CI_Controller {
     // ================================================================
 
     public function rekap_tahunan() {
-        $this->cek_role_super();
-
         $tahun_list  = $this->Admin_model->get_tahun_list();
         $tahun_aktif = (int)($this->input->get('tahun') ?: date('Y'));
 
@@ -364,8 +346,6 @@ class Admin extends CI_Controller {
     }
 
     public function rekap_bulanan() {
-        $this->cek_role_super();
-
         $bulan = (int)($this->input->get('bulan') ?: date('m'));
         $tahun = (int)($this->input->get('tahun') ?: date('Y'));
         $rows  = $this->Admin_model->get_rekap_bulanan_detail($bulan, $tahun);
@@ -578,10 +558,28 @@ class Admin extends CI_Controller {
             redirect('admin/pengajar');
             return;
         }
+
+        $username = trim($this->input->post('username', TRUE) ?: '');
+        $password = $this->input->post('password');
+
+        if ($username !== '' && $this->Pengajar_model->username_exists($username)) {
+            $this->session->set_flashdata('error', 'Username pengajar sudah digunakan.');
+            redirect('admin/pengajar');
+            return;
+        }
+        if (!empty($password) && strlen($password) < 6) {
+            $this->session->set_flashdata('error', 'Password minimal 6 karakter.');
+            redirect('admin/pengajar');
+            return;
+        }
+
+        $tingkat = $this->input->post('tingkat_diajar');
         $this->Pengajar_model->tambah([
             'nama_lengkap'   => $nama,
+            'username'       => $username !== '' ? $username : NULL,
+            'password'       => !empty($password) ? password_hash($password, PASSWORD_BCRYPT) : NULL,
             'no_wa'          => $this->input->post('no_wa') ?: NULL,
-            'mata_pelajaran' => $this->input->post('mata_pelajaran', TRUE) ?: NULL,
+            'tingkat_diajar' => $tingkat ? implode(',', (array)$tingkat) : NULL,
         ]);
         $this->session->set_flashdata('success', 'Pengajar berhasil ditambahkan.');
         redirect('admin/pengajar');
@@ -595,11 +593,34 @@ class Admin extends CI_Controller {
             redirect('admin/pengajar');
             return;
         }
-        $this->Pengajar_model->update($id, [
+
+        $username = trim($this->input->post('username', TRUE) ?: '');
+        $password = $this->input->post('password');
+
+        if ($username !== '' && $this->Pengajar_model->username_exists($username, $id)) {
+            $this->session->set_flashdata('error', 'Username pengajar sudah digunakan pengajar lain.');
+            redirect('admin/pengajar');
+            return;
+        }
+
+        $tingkat = $this->input->post('tingkat_diajar');
+        $data = [
             'nama_lengkap'   => $nama,
+            'username'       => $username !== '' ? $username : NULL,
             'no_wa'          => $this->input->post('no_wa') ?: NULL,
-            'mata_pelajaran' => $this->input->post('mata_pelajaran', TRUE) ?: NULL,
-        ]);
+            'tingkat_diajar' => $tingkat ? implode(',', (array)$tingkat) : NULL,
+        ];
+
+        if (!empty($password)) {
+            if (strlen($password) < 6) {
+                $this->session->set_flashdata('error', 'Password minimal 6 karakter.');
+                redirect('admin/pengajar');
+                return;
+            }
+            $data['password'] = password_hash($password, PASSWORD_BCRYPT);
+        }
+
+        $this->Pengajar_model->update($id, $data);
         $this->session->set_flashdata('success', 'Data pengajar berhasil diperbarui.');
         redirect('admin/pengajar');
     }

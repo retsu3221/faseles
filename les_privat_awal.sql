@@ -24,18 +24,24 @@ DROP TABLE IF EXISTS `admin`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `admin` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `username` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `nama_lengkap` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `role` tinyint NOT NULL DEFAULT '2',
+  `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nama_lengkap` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
-INSERT INTO `admin` (`username`, `password`, `nama_lengkap`, `role`) VALUES
-('admin', '$2y$10$o11fEEO3glVc3e0zh9CR7OSKXdqDnGJ7e7GNoYKRkwAFZ58Bi3c/S', 'Admin Fase Les', 1);
+--
+-- Dumping data for table `admin`
+--
+
+LOCK TABLES `admin` WRITE;
+/*!40000 ALTER TABLE `admin` DISABLE KEYS */;
+INSERT INTO `admin` VALUES (1,'admin','$2y$10$xT7eQKJxczz7mUreXcf4Qe6MTEAGw8AHB50MhPWGj/S0WCgsuQq9q','Administrator','2026-08-06 15:06:37');
+/*!40000 ALTER TABLE `admin` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `bukti_pembayaran`
@@ -59,8 +65,17 @@ CREATE TABLE `bukti_pembayaran` (
   PRIMARY KEY (`id`),
   KEY `fk_bukti_pendaftaran` (`pendaftaran_id`),
   CONSTRAINT `fk_bukti_pendaftaran` FOREIGN KEY (`pendaftaran_id`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `bukti_pembayaran`
+--
+
+LOCK TABLES `bukti_pembayaran` WRITE;
+/*!40000 ALTER TABLE `bukti_pembayaran` DISABLE KEYS */;
+/*!40000 ALTER TABLE `bukti_pembayaran` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `jadwal`
@@ -86,8 +101,17 @@ CREATE TABLE `jadwal` (
   KEY `pengajar_id` (`pengajar_id`),
   CONSTRAINT `jadwal_ibfk_1` FOREIGN KEY (`pendaftaran_id`) REFERENCES `pendaftaran` (`id`) ON DELETE CASCADE,
   CONSTRAINT `jadwal_ibfk_2` FOREIGN KEY (`pengajar_id`) REFERENCES `pengajar` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `jadwal`
+--
+
+LOCK TABLES `jadwal` WRITE;
+/*!40000 ALTER TABLE `jadwal` DISABLE KEYS */;
+/*!40000 ALTER TABLE `jadwal` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `paket`
@@ -98,15 +122,25 @@ DROP TABLE IF EXISTS `paket`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `paket` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `tingkat` enum('TK','SMP','SMA') NOT NULL,
+  `tingkat` enum('TK','SD','SMP','SMA') NOT NULL,
   `tipe_kelas` enum('Privat','Kelompok') NOT NULL,
   `durasi_menit` int NOT NULL,
   `jumlah_pertemuan` int NOT NULL DEFAULT '8',
   `harga` int NOT NULL,
   `is_aktif` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `paket`
+--
+
+LOCK TABLES `paket` WRITE;
+/*!40000 ALTER TABLE `paket` DISABLE KEYS */;
+INSERT INTO `paket` VALUES (1,'SD','Privat',60,8,480000,1),(2,'SD','Privat',90,12,700000,1),(3,'SD','Kelompok',60,8,320000,1),(4,'SMP','Privat',90,8,600000,1),(5,'SMP','Privat',120,12,900000,1),(6,'SMP','Kelompok',90,8,400000,1),(7,'SMA','Privat',90,8,700000,1),(8,'SMA','Privat',120,12,1050000,1),(9,'SMA','Kelompok',90,8,480000,1),(10,'TK','Privat',60,8,400000,1),(11,'TK','Kelompok',60,8,280000,1);
+/*!40000 ALTER TABLE `paket` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `pendaftaran`
@@ -129,8 +163,17 @@ CREATE TABLE `pendaftaran` (
   KEY `fk_paket` (`paket_id`),
   CONSTRAINT `fk_paket` FOREIGN KEY (`paket_id`) REFERENCES `paket` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pendaftaran`
+--
+
+LOCK TABLES `pendaftaran` WRITE;
+/*!40000 ALTER TABLE `pendaftaran` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pendaftaran` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `pengajar`
@@ -142,12 +185,24 @@ DROP TABLE IF EXISTS `pengajar`;
 CREATE TABLE `pengajar` (
   `id` int NOT NULL AUTO_INCREMENT,
   `nama_lengkap` varchar(150) NOT NULL,
+  `username` varchar(100) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `no_wa` varchar(20) DEFAULT NULL,
-  `mata_pelajaran` varchar(200) DEFAULT NULL,
+  `tingkat_diajar` varchar(50) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_pengajar_username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `pengajar`
+--
+
+LOCK TABLES `pengajar` WRITE;
+/*!40000 ALTER TABLE `pengajar` DISABLE KEYS */;
+/*!40000 ALTER TABLE `pengajar` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -173,8 +228,17 @@ CREATE TABLE `users` (
   `pekerjaan_ortu` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -185,5 +249,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-06-19 23:33:31
-
+-- Dump completed on 2026-08-06 22:06:38

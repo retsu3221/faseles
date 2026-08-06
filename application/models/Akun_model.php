@@ -48,7 +48,7 @@ class Akun_model extends CI_Model {
         return $this->db
             ->select('j.*, CONCAT(pak.tingkat, " – ", pak.tipe_kelas) as nama_paket,
                       pg.nama_lengkap as nama_pengajar,
-                      pg.mata_pelajaran, pg.no_wa as wa_pengajar')
+                      pg.tingkat_diajar, pg.no_wa as wa_pengajar')
             ->from('jadwal j')
             ->join('pendaftaran p', 'p.id  = j.pendaftaran_id')
             ->join('paket pak',     'pak.id = p.paket_id')

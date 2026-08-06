@@ -69,8 +69,8 @@ $this->load->view('admin/template/topbar', [
                         </td>
                         <td>
                             <div class="fw-semibold small"><?= htmlspecialchars($j['nama_pengajar']) ?></div>
-                            <?php if ($j['mata_pelajaran']): ?>
-                            <div class="text-muted" style="font-size:.72rem;"><?= htmlspecialchars($j['mata_pelajaran']) ?></div>
+                            <?php if ($j['tingkat_diajar']): ?>
+                            <div class="text-muted" style="font-size:.72rem;"><?= htmlspecialchars($j['tingkat_diajar']) ?></div>
                             <?php endif; ?>
                         </td>
                         <td class="small text-muted d-none d-md-table-cell">
@@ -163,7 +163,7 @@ $this->load->view('admin/template/topbar', [
                             <?php foreach ($pengajar as $pg): ?>
                             <option value="<?= $pg['id'] ?>">
                                 <?= htmlspecialchars($pg['nama_lengkap']) ?>
-                                <?= $pg['mata_pelajaran'] ? '— ' . htmlspecialchars($pg['mata_pelajaran']) : '' ?>
+                                <?= $pg['tingkat_diajar'] ? '— ' . htmlspecialchars($pg['tingkat_diajar']) : '' ?>
                             </option>
                             <?php endforeach; ?>
                         </select>

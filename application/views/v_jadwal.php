@@ -36,8 +36,8 @@
                                     <div class="text-muted small">
                                         <i class="bi bi-person-badge me-1"></i>
                                         <?= htmlspecialchars($j['nama_pengajar']) ?>
-                                        <?php if ($j['mata_pelajaran']): ?>
-                                        <span class="text-muted"> &middot; <?= htmlspecialchars($j['mata_pelajaran']) ?></span>
+                                        <?php if ($j['tingkat_diajar']): ?>
+                                        <span class="text-muted"> &middot; <?= htmlspecialchars($j['tingkat_diajar']) ?></span>
                                         <?php endif; ?>
                                     </div>
                                 </div>
