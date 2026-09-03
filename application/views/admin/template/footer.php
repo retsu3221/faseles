@@ -29,7 +29,7 @@
     <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content border-0 shadow">
             <div class="modal-header border-0 pb-0">
-                <h6 class="modal-title fw-bold">Konfirmasi Logout</h6>
+                <h6 class="modal-title fw-bold">Konfirmasi Keluar</h6>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body small text-muted">
@@ -38,7 +38,7 @@
             <div class="modal-footer border-0 pt-0">
                 <button class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Batal</button>
                 <a class="btn btn-sm btn-danger" href="<?= site_url('admin/logout'); ?>">
-                    <i class="bi bi-box-arrow-right me-1"></i>Logout
+                    <i class="bi bi-box-arrow-right me-1"></i>Keluar
                 </a>
             </div>
         </div>

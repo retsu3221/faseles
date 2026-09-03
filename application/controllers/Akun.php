@@ -14,7 +14,7 @@ class Akun extends CI_Controller {
     // Pastikan user sudah login sebelum akses halaman akun
     private function cek_login() {
         if (!$this->session->userdata('logged_in')) {
-            $this->session->set_flashdata('warning', 'Silakan login terlebih dahulu.');
+            $this->session->set_flashdata('warning', 'Silakan masuk terlebih dahulu.');
             redirect('auth/login');
         }
     }

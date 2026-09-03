@@ -179,12 +179,12 @@ class Admin extends CI_Controller {
         }
 
         if ($this->Admin_model->peserta_username_exists($username, $id)) {
-            $this->session->set_flashdata('error', 'Username sudah digunakan pengguna lain.');
+            $this->session->set_flashdata('error', 'Username sudah digunakan peserta lain.');
             redirect('admin/peserta');
             return;
         }
         if ($this->Admin_model->peserta_email_exists($email, $id)) {
-            $this->session->set_flashdata('error', 'Email sudah digunakan pengguna lain.');
+            $this->session->set_flashdata('error', 'Email sudah digunakan peserta lain.');
             redirect('admin/peserta');
             return;
         }
@@ -214,7 +214,7 @@ class Admin extends CI_Controller {
     public function hapus_peserta($id = null) {
         if (!$id) redirect('admin/peserta');
         $this->Admin_model->hapus_peserta($id);
-        $this->session->set_flashdata('success', 'Pengguna berhasil dihapus.');
+        $this->session->set_flashdata('success', 'Peserta berhasil dihapus.');
         redirect('admin/peserta');
     }
 
@@ -394,7 +394,7 @@ class Admin extends CI_Controller {
         $jadwal_jam  = $this->input->post('jadwal_jam') ?: NULL;
 
         if (!$user_id || !$paket_id) {
-            $this->session->set_flashdata('error', 'Pilih user dan paket terlebih dahulu.');
+            $this->session->set_flashdata('error', 'Pilih peserta dan paket terlebih dahulu.');
             redirect('admin/pembayaran');
             return;
         }
@@ -456,7 +456,7 @@ class Admin extends CI_Controller {
         $this->load->library('upload', $config);
 
         if (!$this->upload->do_upload('file_bukti')) {
-            $this->session->set_flashdata('error', 'Upload gagal: ' . $this->upload->display_errors('', ''));
+            $this->session->set_flashdata('error', 'Unggah gagal: ' . $this->upload->display_errors('', ''));
             redirect('admin/pembayaran');
             return;
         }
@@ -471,7 +471,7 @@ class Admin extends CI_Controller {
             'status_verifikasi' => 'pending',
         ]);
 
-        $this->session->set_flashdata('success', 'Bukti pembayaran berhasil di-upload.');
+        $this->session->set_flashdata('success', 'Bukti pembayaran berhasil diunggah.');
         redirect('admin/pembayaran');
     }
 
@@ -652,15 +652,60 @@ class Admin extends CI_Controller {
         $pengajar_id    = (int)$this->input->post('pengajar_id');
         $hari           = $this->input->post('hari', TRUE);
         $jam_mulai      = $this->input->post('jam_mulai');
-        $jam_selesai    = $this->input->post('jam_selesai');
-        $jumlah         = (int)$this->input->post('jumlah_pertemuan') ?: 8;
         $catatan        = $this->input->post('catatan', TRUE);
 
-        if (!$pendaftaran_id || !$pengajar_id || !$hari || !$jam_mulai || !$jam_selesai) {
-            $this->session->set_flashdata('error', 'Semua field wajib diisi.');
+        if (!$pendaftaran_id || !$pengajar_id || !$hari || !$jam_mulai) {
+            $this->session->set_flashdata('error', 'Semua kolom wajib diisi.');
             redirect('admin/jadwal');
             return;
         }
+
+        // Format jam mulai harus HH:MM (input type=time), tolak yang lain
+        if (!preg_match('/^([01]\d|2[0-3]):[0-5]\d(:[0-5]\d)?$/', $jam_mulai)) {
+            $this->session->set_flashdata('error', 'Format jam mulai tidak valid.');
+            redirect('admin/jadwal');
+            return;
+        }
+
+        // Cegah jadwal ganda untuk pendaftaran yang sama
+        if ($this->Jadwal_model->sudah_dijadwalkan($pendaftaran_id)) {
+            $this->session->set_flashdata('error', 'Pendaftaran ini sudah memiliki jadwal. Hapus jadwal lamanya terlebih dahulu jika ingin mengganti.');
+            redirect('admin/jadwal');
+            return;
+        }
+
+        // Jumlah pertemuan mengikuti paket yang dibayar, bukan input form,
+        // agar tidak ada selisih antara yang dibayar dan yang dijadwalkan
+        $paket = $this->Jadwal_model->get_paket_pendaftaran($pendaftaran_id);
+        if (!$paket) {
+            $this->session->set_flashdata('error', 'Paket untuk pendaftaran ini tidak ditemukan.');
+            redirect('admin/jadwal');
+            return;
+        }
+        $jumlah = (int)$paket['jumlah_pertemuan'];
+        $durasi = (int)$paket['durasi_menit'];
+
+        // Jam selesai dihitung dari durasi paket, tidak diambil dari form.
+        // Dengan begitu durasi jadwal selalu sama dengan yang dibayar, dan
+        // jam terbalik / durasi ngawur tidak mungkin tersimpan.
+        if ($durasi < 1) {
+            $this->session->set_flashdata('error', 'Durasi paket tidak valid, tidak bisa menghitung jam selesai.');
+            redirect('admin/jadwal');
+            return;
+        }
+
+        [$jm_h, $jm_m] = array_map('intval', explode(':', $jam_mulai));
+        $menit_selesai = ($jm_h * 60) + $jm_m + $durasi;
+
+        if ($menit_selesai >= 24 * 60) {
+            $this->session->set_flashdata('error',
+                'Jam mulai terlalu malam. Les ' . $durasi . ' menit dari jam ' . substr($jam_mulai, 0, 5)
+                . ' akan melewati tengah malam.');
+            redirect('admin/jadwal');
+            return;
+        }
+
+        $jam_selesai = sprintf('%02d:%02d:00', intdiv($menit_selesai, 60), $menit_selesai % 60);
 
         $this->Jadwal_model->tambah([
             'pendaftaran_id'    => $pendaftaran_id,

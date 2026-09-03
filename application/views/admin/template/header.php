@@ -54,7 +54,7 @@
                 <a class="nav-link <?= ($active_menu ?? '') === 'peserta' ? 'active' : '' ?>"
                    href="<?= site_url('admin/peserta'); ?>">
                     <i class="bi bi-people-fill"></i>
-                    <span>Users</span>
+                    <span>Peserta</span>
                 </a>
             </li>
             <li class="nav-item">

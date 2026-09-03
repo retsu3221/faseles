@@ -33,7 +33,7 @@
                 <div class="text-muted" style="font-size:.72rem;">@<?= htmlspecialchars($this->session->userdata('pengajar_username')) ?></div>
             </div>
             <a href="<?= site_url('pengajar/logout') ?>" class="btn btn-sm btn-outline-danger">
-                <i class="bi bi-box-arrow-right me-1"></i>Logout
+                <i class="bi bi-box-arrow-right me-1"></i>Keluar
             </a>
         </div>
     </div>

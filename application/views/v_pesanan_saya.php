@@ -39,25 +39,33 @@
                     <?php foreach ($pesanan as $item):
                         $status = $item['status_verifikasi'];
                         $cfg    = $status_config[$status] ?? $status_config['pending'];
+
+                        // Label paket lengkap, mis. "SMP – Privat · 90 menit · 8x pertemuan"
+                        $paketLabel = '-';
+                        if (!empty($item['tipe_kelas'])) {
+                            $paketLabel = !empty($item['tingkat'])
+                                ? $item['tingkat'] . ' – ' . $item['tipe_kelas']
+                                : $item['tipe_kelas'];
+
+                            $rincian = [];
+                            if (!empty($item['durasi_menit']))     $rincian[] = $item['durasi_menit'] . ' menit';
+                            if (!empty($item['jumlah_pertemuan'])) $rincian[] = $item['jumlah_pertemuan'] . 'x pertemuan';
+                            if ($rincian) $paketLabel .= ' · ' . implode(' · ', $rincian);
+                        }
                     ?>
                     <div class="card border-0 shadow-sm rounded-4 pesanan-card">
                         <div class="card-body p-4">
                             <div class="row align-items-center g-3">
 
                                 <!-- Info Utama -->
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-4">
                                     <div class="d-flex align-items-center gap-3 mb-2">
                                         <span class="badge rounded-pill px-3 py-2 <?= $cfg['class']; ?> small">
                                             <i class="bi <?= $cfg['icon']; ?> me-1"></i><?= $cfg['label']; ?>
                                         </span>
                                     </div>
-                                    <h6 class="fw-bold mb-1"><?= htmlspecialchars($item['nama_lengkap']); ?></h6>
-                                    <p class="text-muted small mb-0">
-                                        <?= htmlspecialchars($item['asal_sekolah']); ?> &mdash;
-                                        <?= !empty($item['tipe_kelas'])
-                                            ? htmlspecialchars($item['tipe_kelas'] . ' ' . $item['durasi_menit'] . ' Menit')
-                                            : '-'; ?>
-                                    </p>
+                                    <h6 class="fw-bold mb-1"><?= htmlspecialchars($item['nama_lengkap'] ?? '-'); ?></h6>
+                                    <p class="text-muted small mb-0"><?= htmlspecialchars($paketLabel); ?></p>
                                 </div>
 
                                 <!-- Info Tambahan -->
@@ -75,8 +83,17 @@
                                     </p>
                                 </div>
 
+                                <div class="col-6 col-md-2">
+                                    <p class="text-muted small mb-1">Total Biaya</p>
+                                    <p class="fw-bold small mb-0 text-primary">
+                                        <?= !empty($item['harga'])
+                                            ? 'Rp ' . number_format($item['harga'], 0, ',', '.')
+                                            : '-'; ?>
+                                    </p>
+                                </div>
+
                                 <!-- Tombol -->
-                                <div class="col-12 col-md-2 text-md-end">
+                                <div class="col-6 col-md-2 text-md-end">
                                     <a href="<?= site_url('pendaftaran/pembayaran/' . $item['id']); ?>"
                                        class="btn btn-outline-primary btn-sm fw-bold px-3 rounded-3">
                                         <i class="bi bi-eye me-1"></i> Detail

@@ -80,7 +80,8 @@ class Akun_model extends CI_Model {
     public function get_pesanan($user_id) {
         $sub = $this->status_subquery();
         return $this->db
-            ->select("pendaftaran.*, paket.tipe_kelas, paket.durasi_menit, paket.jumlah_pertemuan, paket.harga,
+            ->select("pendaftaran.*, paket.tingkat, paket.tipe_kelas, paket.durasi_menit,
+                      paket.jumlah_pertemuan, paket.harga,
                       u.nama_lengkap, u.asal_sekolah, u.nama_ortu, u.no_wa_ortu,
                       $sub AS status_verifikasi", FALSE)
             ->from('pendaftaran')

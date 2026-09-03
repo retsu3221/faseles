@@ -55,57 +55,83 @@
                                 <textarea name="alamat" class="form-control bg-light" rows="2" required placeholder="Nama jalan, RT/RW, Kelurahan, Kecamatan..."><?= htmlspecialchars($user_data->alamat ?? '') ?></textarea>
                             </div>
 
-                            <div class="form-section-title">&#128218; Data Sekolah & Paket Les</div>
-
-                            <div class="mb-3">
-                                <label class="form-label text-muted fw-bold d-block">Tingkat Sekolah</label>
-                                <?php $asal = $user_data->asal_sekolah ?? ''; ?>
-                                <div class="d-flex gap-3 mt-1 flex-wrap">
-                                    <div class="form-check">
-                                        <input class="form-check-input tingkat-sekolah" type="checkbox" name="asal_sekolah" value="TK" id="tingkatTK" <?= $asal === 'TK' ? 'checked' : '' ?>>
-                                        <label class="form-check-label" for="tingkatTK">TK & SD</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input tingkat-sekolah" type="checkbox" name="asal_sekolah" value="SMP" id="tingkatSMP" <?= $asal === 'SMP' ? 'checked' : '' ?>>
-                                        <label class="form-check-label" for="tingkatSMP">SMP / MTs</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input tingkat-sekolah" type="checkbox" name="asal_sekolah" value="SMA" id="tingkatSMA" <?= $asal === 'SMA' ? 'checked' : '' ?>>
-                                        <label class="form-check-label" for="tingkatSMA">SMA / K</label>
+                            <div class="paket-section">
+                                <div class="paket-section-header">
+                                    <span class="ps-icon">&#128218;</span>
+                                    <div>
+                                        <div class="ps-title">Data Sekolah &amp; Paket Les</div>
+                                        <div class="ps-sub">Tentukan tingkat, paket, dan jadwal belajarmu</div>
                                     </div>
                                 </div>
-                                <p class="text-muted small mt-2 mb-0">*Pilih salah satu tingkat sekolah terlebih dahulu</p>
-                            </div>
 
-                            <div class="mb-3">
-                                <label class="form-label text-muted fw-bold">Kelas & Paket yang Diambil</label>
-                                <select name="paket_id" id="pilihanKelas" class="form-select bg-light" required>
-                                    <option value="" disabled selected>-- Pilih tingkat sekolah dulu --</option>
-                                    <?php
-                                    $tingkatLabel = ['TK' => 'TK & SD', 'SMP' => 'SMP/MTs', 'SMA' => 'SMA/K'];
-                                    foreach ($paket as $p):
-                                    ?>
-                                    <option value="<?= $p['id']; ?>" data-tingkat="<?= $p['tingkat']; ?>">
-                                        <?= htmlspecialchars($p['tipe_kelas']); ?> <?= $tingkatLabel[$p['tingkat']] ?? $p['tingkat']; ?> &nbsp;|&nbsp; <?= $p['durasi_menit']; ?> Menit · <?= $p['jumlah_pertemuan']; ?>x · Rp <?= number_format($p['harga'], 0, ',', '.'); ?>
-                                    </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
+                                <div class="paket-section-body">
 
-                            <div class="mb-3">
-                                <label class="form-label text-muted fw-bold">Jadwal Belajar</label>
-                                <div class="d-flex gap-2">
-                                    <select name="jadwal" class="form-select bg-light">
-                                        <option value="" disabled selected>-- Pilih Hari --</option>
-                                        <option value="Senin">Senin</option>
-                                        <option value="Selasa">Selasa</option>
-                                        <option value="Rabu">Rabu</option>
-                                        <option value="Kamis">Kamis</option>
-                                        <option value="Jumat">Jumat</option>
-                                        <option value="Sabtu">Sabtu</option>
-                                        <option value="Minggu">Minggu</option>
-                                    </select>
-                                    <input type="time" name="jam" class="form-control bg-light" required>
+                                    <!-- 1. Tingkat sekolah -->
+                                    <div class="mb-4">
+                                        <label class="paket-label d-block mb-2">
+                                            <span class="step-num">1</span>Tingkat Sekolah
+                                        </label>
+                                        <?php $asal = $user_data->asal_sekolah ?? ''; ?>
+                                        <div class="tingkat-options">
+                                            <div class="tingkat-card">
+                                                <input class="tingkat-sekolah" type="checkbox" name="asal_sekolah" value="TK" id="tingkatTK" <?= $asal === 'TK' ? 'checked' : '' ?>>
+                                                <label for="tingkatTK"><span class="tc-emoji">&#129528;</span>TK &amp; SD</label>
+                                            </div>
+                                            <div class="tingkat-card">
+                                                <input class="tingkat-sekolah" type="checkbox" name="asal_sekolah" value="SMP" id="tingkatSMP" <?= $asal === 'SMP' ? 'checked' : '' ?>>
+                                                <label for="tingkatSMP"><span class="tc-emoji">&#128216;</span>SMP / MTs</label>
+                                            </div>
+                                            <div class="tingkat-card">
+                                                <input class="tingkat-sekolah" type="checkbox" name="asal_sekolah" value="SMA" id="tingkatSMA" <?= $asal === 'SMA' ? 'checked' : '' ?>>
+                                                <label for="tingkatSMA"><span class="tc-emoji">&#127891;</span>SMA / K</label>
+                                            </div>
+                                        </div>
+                                        <p class="text-muted small mt-2 mb-0">*Pilih salah satu tingkat sekolah terlebih dahulu</p>
+                                    </div>
+
+                                    <!-- 2. Paket -->
+                                    <div class="mb-4">
+                                        <label class="paket-label d-block mb-2">
+                                            <span class="step-num">2</span>Kelas &amp; Paket yang Diambil
+                                        </label>
+                                        <select name="paket_id" id="pilihanKelas" class="form-select" required>
+                                            <option value="" disabled selected>-- Pilih tingkat sekolah dulu --</option>
+                                            <?php
+                                            $tingkatLabel = ['TK' => 'TK & SD', 'SMP' => 'SMP/MTs', 'SMA' => 'SMA/K'];
+                                            foreach ($paket as $p):
+                                            ?>
+                                            <option value="<?= $p['id']; ?>" data-tingkat="<?= $p['tingkat']; ?>" data-harga="<?= $p['harga']; ?>">
+                                                <?= htmlspecialchars($p['tipe_kelas']); ?> <?= $tingkatLabel[$p['tingkat']] ?? $p['tingkat']; ?> &nbsp;|&nbsp; <?= $p['durasi_menit']; ?> Menit · <?= $p['jumlah_pertemuan']; ?>x · Rp <?= number_format($p['harga'], 0, ',', '.'); ?>
+                                            </option>
+                                            <?php endforeach; ?>
+                                        </select>
+
+                                        <div id="paketHargaBox" class="paket-harga-box">
+                                            <span class="ph-label">&#128176; Total Biaya Paket</span>
+                                            <span class="ph-nilai" id="paketHargaNilai">&mdash;</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- 3. Jadwal -->
+                                    <div>
+                                        <label class="paket-label d-block mb-2">
+                                            <span class="step-num">3</span>Jadwal Belajar
+                                        </label>
+                                        <div class="d-flex gap-2">
+                                            <select name="jadwal" class="form-select">
+                                                <option value="" disabled selected>-- Pilih Hari --</option>
+                                                <option value="Senin">Senin</option>
+                                                <option value="Selasa">Selasa</option>
+                                                <option value="Rabu">Rabu</option>
+                                                <option value="Kamis">Kamis</option>
+                                                <option value="Jumat">Jumat</option>
+                                                <option value="Sabtu">Sabtu</option>
+                                                <option value="Minggu">Minggu</option>
+                                            </select>
+                                            <input type="time" name="jam" class="form-control" required>
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -247,6 +273,24 @@
     </div>
 
     <script>
+    // Tampilkan / sembunyikan ringkasan harga sesuai paket terpilih
+    function updateHargaPaket() {
+        const select = document.getElementById('pilihanKelas');
+        const box    = document.getElementById('paketHargaBox');
+        const nilai  = document.getElementById('paketHargaNilai');
+        const opt    = select.options[select.selectedIndex];
+        const harga  = opt ? opt.getAttribute('data-harga') : null;
+
+        if (harga) {
+            nilai.textContent = 'Rp ' + parseInt(harga, 10).toLocaleString('id-ID');
+            box.classList.add('show');
+        } else {
+            box.classList.remove('show');
+        }
+    }
+
+    document.getElementById('pilihanKelas').addEventListener('change', updateHargaPaket);
+
     document.querySelectorAll('.tingkat-sekolah').forEach(checkbox => {
         checkbox.addEventListener('change', function () {
             if (this.checked) {
@@ -259,6 +303,7 @@
             const selectKelas = document.getElementById('pilihanKelas');
 
             selectKelas.value = '';
+            updateHargaPaket();
 
             selectKelas.querySelectorAll('option').forEach(option => {
                 const tingkat = option.getAttribute('data-tingkat');

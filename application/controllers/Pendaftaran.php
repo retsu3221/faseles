@@ -31,7 +31,7 @@ class Pendaftaran extends CI_Controller {
     // Fungsi untuk menampilkan Form Pendaftaran
     public function daftar() {
         if (!$this->session->userdata('logged_in')) {
-            $this->session->set_flashdata('warning', 'Silakan login terlebih dahulu untuk mengakses formulir pendaftaran.');
+            $this->session->set_flashdata('warning', 'Silakan masuk terlebih dahulu untuk mengakses formulir pendaftaran.');
             redirect('auth/login');
         }
         $data['paket']     = $this->Paket_model->get_aktif();
@@ -75,7 +75,7 @@ class Pendaftaran extends CI_Controller {
     // Halaman pembayaran
     public function pembayaran($id) {
         if (!$this->session->userdata('logged_in')) {
-            $this->session->set_flashdata('warning', 'Silakan login terlebih dahulu.');
+            $this->session->set_flashdata('warning', 'Silakan masuk terlebih dahulu.');
             redirect('auth/login');
         }
 
@@ -124,8 +124,30 @@ class Pendaftaran extends CI_Controller {
         $tanggal_transfer = $this->input->post('tanggal_transfer');
         $catatan = $this->input->post('catatan', TRUE);
 
-        // Validasi tanggal transfer tidak boleh melewati hari ini
-        if (!empty($tanggal_transfer) && $tanggal_transfer > date('Y-m-d')) {
+        // Validasi field wajib dilakukan SEBELUM file diproses, karena kolomnya
+        // NOT NULL di database. Kalau dilewati, file terlanjur ter-upload lalu
+        // INSERT gagal -> file jadi sampah di server.
+        if ($nama_pengirim === '' || $nama_pengirim === null) {
+            $this->session->set_flashdata('error', 'Nama pengirim wajib diisi.');
+            redirect('pendaftaran/pembayaran/' . $pendaftaran_id);
+            return;
+        }
+
+        if ($jumlah_transfer <= 0) {
+            $this->session->set_flashdata('error', 'Jumlah transfer wajib diisi dan harus lebih dari 0.');
+            redirect('pendaftaran/pembayaran/' . $pendaftaran_id);
+            return;
+        }
+
+        $tgl = $tanggal_transfer ? DateTime::createFromFormat('Y-m-d', $tanggal_transfer) : false;
+        if (!$tgl || $tgl->format('Y-m-d') !== $tanggal_transfer) {
+            $this->session->set_flashdata('error', 'Tanggal transfer wajib diisi dengan format yang benar.');
+            redirect('pendaftaran/pembayaran/' . $pendaftaran_id);
+            return;
+        }
+
+        // Tanggal transfer tidak boleh melewati hari ini
+        if ($tanggal_transfer > date('Y-m-d')) {
             $this->session->set_flashdata('error', 'Tanggal transfer tidak boleh melewati tanggal hari ini.');
             redirect('pendaftaran/pembayaran/' . $pendaftaran_id);
             return;
@@ -156,7 +178,7 @@ class Pendaftaran extends CI_Controller {
         $this->load->library('upload', $config);
 
         if (!$this->upload->do_upload('file_bukti')) {
-            $this->session->set_flashdata('error', 'Upload gagal: ' . $this->upload->display_errors('', ''));
+            $this->session->set_flashdata('error', 'Unggah gagal: ' . $this->upload->display_errors('', ''));
             redirect('pendaftaran/pembayaran/' . $pendaftaran_id);
             return;
         }
@@ -174,9 +196,24 @@ class Pendaftaran extends CI_Controller {
             'status_verifikasi'=> 'pending',
         ];
 
-        $this->BuktiPembayaran_model->simpan($data);
+        // Kalau penyimpanan gagal, file yang sudah ter-upload ikut dihapus agar
+        // tidak menumpuk jadi sampah di server. db_debug dimatikan sementara
+        // supaya user tidak melihat halaman error database mentah.
+        $db_debug_asal      = $this->db->db_debug;
+        $this->db->db_debug = FALSE;
+        $tersimpan          = $this->BuktiPembayaran_model->simpan($data);
+        $this->db->db_debug = $db_debug_asal;
 
-        $this->session->set_flashdata('success', 'Bukti pembayaran berhasil di-upload. Admin akan segera memverifikasi.');
+        if (!$tersimpan) {
+            if (!empty($upload_data['full_path']) && is_file($upload_data['full_path'])) {
+                @unlink($upload_data['full_path']);
+            }
+            $this->session->set_flashdata('error', 'Bukti pembayaran gagal disimpan. Silakan coba lagi.');
+            redirect('pendaftaran/pembayaran/' . $pendaftaran_id);
+            return;
+        }
+
+        $this->session->set_flashdata('success', 'Bukti pembayaran berhasil diunggah. Admin akan segera memverifikasi.');
         redirect('pendaftaran/pembayaran/' . $pendaftaran_id);
     }
 

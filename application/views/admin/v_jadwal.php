@@ -139,10 +139,12 @@ $this->load->view('admin/template/topbar', [
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold small">Siswa (Pendaftaran Lunas) <span class="text-danger">*</span></label>
-                        <select name="pendaftaran_id" class="form-select" required>
+                        <select name="pendaftaran_id" id="pilihSiswa" class="form-select" required>
                             <option value="" disabled selected>-- Pilih Siswa --</option>
                             <?php foreach ($pendaftaran_lunas as $pl): ?>
-                            <option value="<?= $pl['id'] ?>">
+                            <option value="<?= $pl['id'] ?>"
+                                    data-pertemuan="<?= (int)$pl['jumlah_pertemuan'] ?>"
+                                    data-durasi="<?= (int)$pl['durasi_menit'] ?>">
                                 <?= htmlspecialchars($pl['nama_lengkap'] ?: $pl['username']) ?>
                                 — <?= htmlspecialchars($pl['nama_paket']) ?>
                                 <?php if ($pl['jadwal_hari']): ?>
@@ -180,16 +182,20 @@ $this->load->view('admin/template/topbar', [
                             </select>
                         </div>
                         <div class="col-sm-6">
-                            <label class="form-label fw-semibold small">Jumlah Pertemuan <span class="text-danger">*</span></label>
-                            <input type="number" name="jumlah_pertemuan" class="form-control" value="8" min="1" max="100" required>
+                            <label class="form-label fw-semibold small">Jumlah Pertemuan</label>
+                            <input type="text" id="infoJumlahPertemuan" class="form-control bg-light"
+                                   value="—" readonly tabindex="-1">
+                            <div class="form-text" style="font-size:.72rem;">Otomatis mengikuti paket siswa</div>
                         </div>
                         <div class="col-sm-6">
                             <label class="form-label fw-semibold small">Jam Mulai <span class="text-danger">*</span></label>
-                            <input type="time" name="jam_mulai" class="form-control" required>
+                            <input type="time" name="jam_mulai" id="inputJamMulai" class="form-control" required>
                         </div>
                         <div class="col-sm-6">
-                            <label class="form-label fw-semibold small">Jam Selesai <span class="text-danger">*</span></label>
-                            <input type="time" name="jam_selesai" class="form-control" required>
+                            <label class="form-label fw-semibold small">Jam Selesai</label>
+                            <input type="text" id="inputJamSelesai" class="form-control bg-light"
+                                   value="—" readonly tabindex="-1">
+                            <div class="form-text" style="font-size:.72rem;">Otomatis: jam mulai + durasi paket</div>
                         </div>
                     </div>
 
@@ -270,6 +276,53 @@ document.getElementById('searchJadwal').addEventListener('input', function () {
     });
     document.getElementById('jumlahJadwal').textContent = shown + ' jadwal';
 });
+
+// Jumlah pertemuan & jam selesai mengikuti paket siswa (hanya tampilan;
+// nilai final tetap dihitung server dari paket agar tidak bisa dimanipulasi)
+var selSiswa   = document.getElementById('pilihSiswa');
+var inJamMulai = document.getElementById('inputJamMulai');
+var outSelesai = document.getElementById('inputJamSelesai');
+
+function durasiPaketTerpilih() {
+    var opt = selSiswa.options[selSiswa.selectedIndex];
+    return opt ? parseInt(opt.getAttribute('data-durasi'), 10) : 0;
+}
+
+function hitungJamSelesai() {
+    var durasi = durasiPaketTerpilih();
+    var mulai  = inJamMulai.value;
+
+    if (!durasi || !mulai) {
+        outSelesai.value = '—';
+        outSelesai.classList.remove('text-danger');
+        return;
+    }
+
+    var p     = mulai.split(':');
+    var total = (parseInt(p[0], 10) * 60) + parseInt(p[1], 10) + durasi;
+
+    if (total >= 24 * 60) {
+        outSelesai.value = 'Melewati tengah malam';
+        outSelesai.classList.add('text-danger');
+        return;
+    }
+
+    outSelesai.classList.remove('text-danger');
+    outSelesai.value = String(Math.floor(total / 60)).padStart(2, '0') + ':'
+                     + String(total % 60).padStart(2, '0')
+                     + '  (' + durasi + ' menit)';
+}
+
+selSiswa.addEventListener('change', function () {
+    var opt    = this.options[this.selectedIndex];
+    var jml    = opt ? opt.getAttribute('data-pertemuan') : '';
+    var durasi = opt ? opt.getAttribute('data-durasi') : '';
+    document.getElementById('infoJumlahPertemuan').value =
+        jml ? jml + ' pertemuan' + (durasi ? ' · ' + durasi + ' menit' : '') : '—';
+    hitungJamSelesai();
+});
+
+inJamMulai.addEventListener('input', hitungJamSelesai);
 
 document.querySelectorAll('.btn-selesai').forEach(function (btn) {
     btn.addEventListener('click', function (e) {

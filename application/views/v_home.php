@@ -11,7 +11,7 @@
 
     <section id="keunggulan" class="py-5">
         <div class="container text-center">
-            <h2 class="fw-bold mb-5">🌟 CORE VALUES</h2>
+            <h2 class="fw-bold mb-5">🌟 NILAI UTAMA</h2>
 
             <div class="row justify-content-center g-4">
                 <div class="col-md-4">
@@ -59,7 +59,7 @@
                     <div class="card h-100 shadow-sm border-0">
                         <img src="<?= base_url('assets/img/foto1.png'); ?>" class="card-img-top" alt="Matematika" style="height: 250px; object-fit: contain; background-color: #e9ecef;">
                         <div class="card-body">
-                            <h5 class="card-title fw-bold text-center text-danger">FASE Les (Private SD)</h5>
+                            <h5 class="card-title fw-bold text-center text-danger">FASE Les (Privat SD)</h5>
                             <p class="card-text" style="font-size: 0.9rem;">
                                 Hari : Sabtu, 2 Mei 2026 <br>
                                 Jam : 08.00 - 09.00 <br>
@@ -80,7 +80,7 @@
                             Maaf, browser Anda tidak mendukung pemutaran video.
                         </video>
                         <div class="card-body">
-                            <h5 class="card-title fw-bold text-center text-success">FASE Les (Private TK)</h5>
+                            <h5 class="card-title fw-bold text-center text-success">FASE Les (Privat TK)</h5>
                             <p class="card-text" style="font-size: 0.9rem;">
                                 Hari : Jum'at, 15 Mei 2026 <br>
                                 Jam : 19.10 - 20.10 <br>
@@ -98,7 +98,7 @@
                     <div class="card h-100 shadow-sm border-0">
                         <img src="<?= base_url('assets/img/Foto3.png'); ?>" class="card-img-top" alt="Informatika" style="height: 250px; object-fit: contain; background-color: #e9ecef;">
                         <div class="card-body">
-                            <h5 class="card-title fw-bold text-center text-primary">FASE Les (Private SMK)</h5>
+                            <h5 class="card-title fw-bold text-center text-primary">FASE Les (Privat SMK)</h5>
                             <p class="card-text" style="font-size: 0.9rem;">
                                 Hari : Rabu, 4 April 2026 <br>
                                 Jam : 16.10 - 17.10 <br>

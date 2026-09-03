@@ -10,10 +10,10 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav fw-bold ms-auto">
-                    <li class="nav-item"><a class="nav-link <?= $active === 'home' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran'); ?>">Home</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $active === 'tentang_kami' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran/tentang_kami'); ?>">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $active === 'fasilitas' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran/fasilitas'); ?>">Benefits</a></li>
-                    <li class="nav-item"><a class="nav-link <?= $active === 'kontak_kami' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran/kontak_kami'); ?>">Contact Us</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $active === 'home' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran'); ?>">Beranda</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $active === 'tentang_kami' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran/tentang_kami'); ?>">Tentang Kami</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $active === 'fasilitas' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran/fasilitas'); ?>">Fasilitas</a></li>
+                    <li class="nav-item"><a class="nav-link <?= $active === 'kontak_kami' ? 'text-primary' : ''; ?>" href="<?= site_url('pendaftaran/kontak_kami'); ?>">Kontak</a></li>
                     <?php if ($this->session->userdata('logged_in')):
                         $nama     = htmlspecialchars($this->session->userdata('nama_lengkap') ?: $this->session->userdata('username'));
                         $username = htmlspecialchars($this->session->userdata('username'));
@@ -59,13 +59,13 @@
 
                             <li><a class="dropdown-item d-flex align-items-center gap-3 py-2 px-4 text-danger" href="<?= site_url('auth/logout'); ?>">
                                 <span class="dd-icon bg-danger-subtle text-danger"><i class="bi bi-box-arrow-right"></i></span>
-                                <span>Logout</span>
+                                <span>Keluar</span>
                             </a></li>
 
                         </ul>
                     </li>
                     <?php else: ?>
-                    <li class="nav-item"><a class="btn btn-outline-primary ms-lg-3 px-4" href="<?= site_url('auth/login'); ?>">Login</a></li>
+                    <li class="nav-item"><a class="btn btn-outline-primary ms-lg-3 px-4" href="<?= site_url('auth/login'); ?>">Masuk</a></li>
                     <?php endif; ?>
                     <li class="nav-item"><a class="btn-daftar-les ms-lg-2" href="<?= site_url('pendaftaran/daftar'); ?>"><i class="bi bi-pencil-square me-1"></i>Daftar Les</a></li>
                 </ul>

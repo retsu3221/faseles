@@ -28,8 +28,15 @@ class Auth_model extends CI_Model {
         return $this->db->get_where('users', ['email' => $email])->num_rows() > 0;
     }
 
-    // Simpan user baru ke tabel users
+    // Simpan user baru ke tabel users.
+    // db_debug dimatikan sementara supaya pelanggaran UNIQUE index (username /
+    // email kembar) mengembalikan FALSE, bukan menampilkan halaman error database.
     public function simpan_user($data) {
-        $this->db->insert('users', $data);
+        $db_debug_asal      = $this->db->db_debug;
+        $this->db->db_debug = FALSE;
+        $berhasil           = $this->db->insert('users', $data);
+        $this->db->db_debug = $db_debug_asal;
+
+        return $berhasil;
     }
 }

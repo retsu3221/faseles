@@ -78,7 +78,7 @@ class Auth extends CI_Controller {
 
         // Validasi field wajib
         if (empty($username) || empty($email) || empty($nama_lengkap) || empty($password)) {
-            $this->session->set_flashdata('error', 'Semua field wajib diisi.');
+            $this->session->set_flashdata('error', 'Semua kolom wajib diisi.');
             redirect('auth/register');
             return;
         }
@@ -90,9 +90,17 @@ class Auth extends CI_Controller {
             return;
         }
 
-        // Validasi panjang password
-        if (strlen($password) < 8) {
-            $this->session->set_flashdata('error', 'Password minimal 8 karakter.');
+        // Validasi panjang username (disamakan dengan aturan ubah username di Akun)
+        $panjang_username = mb_strlen($username);
+        if ($panjang_username < 3 || $panjang_username > 50) {
+            $this->session->set_flashdata('error', 'Username harus 3 sampai 50 karakter.');
+            redirect('auth/register');
+            return;
+        }
+
+        // Validasi panjang password (disamakan dengan aturan di halaman lain: 6 karakter)
+        if (strlen($password) < 6) {
+            $this->session->set_flashdata('error', 'Password minimal 6 karakter.');
             redirect('auth/register');
             return;
         }
@@ -118,30 +126,39 @@ class Auth extends CI_Controller {
             return;
         }
 
-        // Simpan user baru beserta data pribadi
-        $this->Auth_model->simpan_user([
+        // Simpan user baru beserta data pribadi.
+        // Kolom tanggal bertipe DATE menolak string kosong, jadi dikosongkan ke NULL.
+        $tersimpan = $this->Auth_model->simpan_user([
             'username'      => $username,
             'email'         => $email,
             'password'      => password_hash($password, PASSWORD_BCRYPT),
             'nama_lengkap'  => $nama_lengkap,
-            'tempat_lahir'  => $this->input->post('tempat_lahir', TRUE),
-            'tanggal_lahir' => $this->input->post('tanggal_lahir'),
-            'jenis_kelamin' => $this->input->post('jenis_kelamin'),
-            'alamat'        => $this->input->post('alamat', TRUE),
+            'tempat_lahir'  => $this->input->post('tempat_lahir', TRUE) ?: NULL,
+            'tanggal_lahir' => $this->input->post('tanggal_lahir') ?: NULL,
+            'jenis_kelamin' => $this->input->post('jenis_kelamin') ?: NULL,
+            'alamat'        => $this->input->post('alamat', TRUE) ?: NULL,
             'asal_sekolah'  => $this->input->post('asal_sekolah') ?: NULL,
             'nama_ortu'     => $this->input->post('nama_ortu', TRUE) ?: NULL,
             'no_wa_ortu'    => $this->input->post('no_wa_ortu') ?: NULL,
             'pekerjaan_ortu'=> $this->input->post('pekerjaan_ortu', TRUE) ?: NULL,
         ]);
 
-        $this->session->set_flashdata('success', 'Akun berhasil dibuat! Silakan login.');
+        // Pengaman terakhir: kalau dua orang mendaftar bersamaan dengan username
+        // atau email yang sama, UNIQUE index di database yang menolaknya.
+        if (!$tersimpan) {
+            $this->session->set_flashdata('error', 'Username atau email sudah digunakan. Silakan coba yang lain.');
+            redirect('auth/register');
+            return;
+        }
+
+        $this->session->set_flashdata('success', 'Akun berhasil dibuat! Silakan masuk.');
         redirect('auth/login');
     }
 
     // Logout
     public function logout() {
         $this->session->unset_userdata(['logged_in', 'user_id', 'username', 'nama_lengkap']);
-        $this->session->set_flashdata('logout', 'Anda telah berhasil logout.');
+        $this->session->set_flashdata('logout', 'Anda telah berhasil keluar.');
         redirect('auth/login');
     }
 }

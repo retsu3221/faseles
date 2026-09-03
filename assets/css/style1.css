@@ -94,6 +94,155 @@ footer {
 }
 
 /* ========================================================
+   SEKSI PAKET (disorot berbeda dari seksi form lain)
+   ======================================================== */
+.paket-section {
+    border: 2px solid #cfe0ff;
+    border-radius: 16px;
+    background: linear-gradient(180deg, #f7faff 0%, #ffffff 60%);
+    box-shadow: 0 8px 22px rgba(13, 110, 253, .10);
+    margin: 32px 0 26px;
+    overflow: hidden;
+}
+
+.paket-section-header {
+    background: linear-gradient(135deg, #0d6efd 0%, #4dabf7 100%);
+    color: #fff;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+.paket-section-header .ps-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+.paket-section-header .ps-title {
+    font-weight: 800;
+    font-size: .95rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+}
+.paket-section-header .ps-sub {
+    font-size: .74rem;
+    opacity: .85;
+    margin-top: 2px;
+}
+
+.paket-section-body {
+    padding: 20px;
+}
+
+/* Label bernomor di dalam seksi paket */
+.paket-label {
+    font-size: .74rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: #5a6b82;
+}
+.paket-label .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: #0d6efd;
+    color: #fff;
+    font-size: .68rem;
+    margin-right: 7px;
+}
+
+/* Pilihan tingkat sekolah sebagai kartu */
+.tingkat-options {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.tingkat-card {
+    flex: 1 1 130px;
+    position: relative;
+}
+.tingkat-card input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.tingkat-card label {
+    display: block;
+    text-align: center;
+    padding: 14px 10px;
+    border: 2px solid #dbe6f7;
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: .88rem;
+    color: #55606e;
+    transition: all .15s ease;
+    margin: 0;
+}
+.tingkat-card label .tc-emoji {
+    display: block;
+    font-size: 1.5rem;
+    margin-bottom: 5px;
+}
+.tingkat-card label:hover {
+    border-color: #9dc1f5;
+    transform: translateY(-2px);
+}
+.tingkat-card input:checked + label {
+    border-color: #0d6efd;
+    background: #eaf2ff;
+    color: #0d6efd;
+    box-shadow: 0 5px 14px rgba(13, 110, 253, .20);
+}
+
+/* Input di dalam seksi paket dibuat lebih tegas */
+.paket-section .form-select,
+.paket-section .form-control {
+    border: 2px solid #dbe6f7;
+    background-color: #fff;
+    padding: 10px 12px;
+    font-weight: 600;
+    border-radius: 10px;
+}
+.paket-section .form-select:focus,
+.paket-section .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .13);
+}
+
+/* Ringkasan harga paket terpilih */
+.paket-harga-box {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #eafaf1;
+    border: 1px solid #b7e4c7;
+}
+.paket-harga-box.show {
+    display: flex;
+}
+.paket-harga-box .ph-label {
+    font-size: .76rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    color: #2e7d32;
+}
+.paket-harga-box .ph-nilai {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #1b5e20;
+}
+
+/* ========================================================
    HALAMAN REGISTER
    ======================================================== */
 .register-tab-wrapper {

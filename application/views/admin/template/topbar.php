@@ -43,7 +43,7 @@
                             <li>
                                 <a class="dropdown-item text-danger" href="#"
                                    data-bs-toggle="modal" data-bs-target="#logoutModal">
-                                    <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                    <i class="bi bi-box-arrow-right me-2"></i>Keluar
                                 </a>
                             </li>
                         </ul>

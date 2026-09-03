@@ -145,7 +145,7 @@ $this->load->view('admin/template/topbar', [
                     </div>
                     <hr class="my-3">
                     <div class="small fw-bold text-secondary mb-2">
-                        <i class="bi bi-key me-1"></i>Akun Login Portal Pengajar <span class="fw-normal text-muted">(opsional)</span>
+                        <i class="bi bi-key me-1"></i>Akun Portal Pengajar<span class="fw-normal text-muted">(opsional)</span>
                     </div>
                     <div class="row g-3 mb-1">
                         <div class="col-sm-6">
@@ -207,7 +207,7 @@ $this->load->view('admin/template/topbar', [
                     </div>
                     <hr class="my-3">
                     <div class="small fw-bold text-secondary mb-2">
-                        <i class="bi bi-key me-1"></i>Akun Login Portal Pengajar <span class="fw-normal text-muted">(opsional)</span>
+                        <i class="bi bi-key me-1"></i>Akun Portal Pengajar<span class="fw-normal text-muted">(opsional)</span>
                     </div>
                     <div class="row g-3 mb-1">
                         <div class="col-sm-6">
